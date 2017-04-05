@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+##PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    #parse("head-contents.vm")
+    <style type="text/css">
+        .portal {
+            width: 200px;
+            margin: 20px;
+            height: 200px;
+            line-height: 300px;
+            padding: 10px;
+            text-align: center;
+            font-size: 25px;
+            float: left;
+            border: 2px solid #ccc;
+            cursor: pointer;
+            display: block;
+        }
+
+        a.portal {
+            color: #000;
+            text-decoration: none
+        }
+
+        a.portal:hover {
+            background: #FA8000;
+            color: #fff
+        }
+    </style>
+</head>
+<body>
+    #parse("page-header.vm")
+<!-- 用户头像栏 -->
+<div class="user-bg">
+    <div class="user-info wrap">
+        <img src="$!{user.uphoto}" style="width:128px;">
+        <div class="messages">${user.username}, 欢迎回来!</div>
+    </div>
+</div>
+<!-- 用户头像栏 -->
+
+<div style="overflow: hidden;width: 1200px;margin: 0 auto">
+    <a class="portal" href="/settings/">用户设置</a>
+
+    <a class="portal" href="/order/list">我的订单</a>
+    <a class="portal" href="#">购物车 <span id="head-cart-item-count"></span></a>
+    <a class="portal" href="#">收藏夹</a>
+    <a class="portal" href="#">系统消息</a>
+
+</div>
+
+    #parse("page-footer.vm")
+
+</body>
+</html>

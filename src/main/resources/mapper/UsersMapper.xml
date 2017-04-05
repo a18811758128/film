@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ln.film.dao.UsersMapper" >
+  <resultMap id="BaseResultMap" type="com.ln.film.model.Users" >
+    <id column="userid" property="userid" jdbcType="INTEGER" />
+    <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="URealName" property="urealname" jdbcType="VARCHAR" />
+    <result column="USex" property="usex" jdbcType="VARCHAR" />
+    <result column="UPhone" property="uphone" jdbcType="VARCHAR" />
+    <result column="UEmail" property="uemail" jdbcType="VARCHAR" />
+    <result column="Uqq" property="uqq" jdbcType="VARCHAR" />
+    <result column="UBirth" property="ubirth" jdbcType="VARCHAR" />
+    <result column="roleid" property="roleid" jdbcType="INTEGER" />
+    <result column="UIDCard" property="uidcard" jdbcType="VARCHAR" />
+    <result column="UPhoto" property="uphoto" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    userid, username, password, URealName, USex, UPhone, UEmail, Uqq, UBirth, roleid, 
+    UIDCard, UPhoto
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.ln.film.model.UsersExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from users
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from users
+    where userid = #{userid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from users
+    where userid = #{userid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.ln.film.model.UsersExample" >
+    delete from users
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.ln.film.model.Users" >
+    insert into users (userid, username, password, 
+      URealName, USex, UPhone, 
+      UEmail, Uqq, UBirth, 
+      roleid, UIDCard, UPhoto
+      )
+    values (#{userid,jdbcType=INTEGER}, #{username,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, 
+      #{urealname,jdbcType=VARCHAR}, #{usex,jdbcType=VARCHAR}, #{uphone,jdbcType=VARCHAR}, 
+      #{uemail,jdbcType=VARCHAR}, #{uqq,jdbcType=VARCHAR}, #{ubirth,jdbcType=VARCHAR}, 
+      #{roleid,jdbcType=INTEGER}, #{uidcard,jdbcType=VARCHAR}, #{uphoto,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.ln.film.model.Users" >
+    insert into users
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="userid != null" >
+        userid,
+      </if>
+      <if test="username != null" >
+        username,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="urealname != null" >
+        URealName,
+      </if>
+      <if test="usex != null" >
+        USex,
+      </if>
+      <if test="uphone != null" >
+        UPhone,
+      </if>
+      <if test="uemail != null" >
+        UEmail,
+      </if>
+      <if test="uqq != null" >
+        Uqq,
+      </if>
+      <if test="ubirth != null" >
+        UBirth,
+      </if>
+      <if test="roleid != null" >
+        roleid,
+      </if>
+      <if test="uidcard != null" >
+        UIDCard,
+      </if>
+      <if test="uphoto != null" >
+        UPhoto,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="userid != null" >
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="username != null" >
+        #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="urealname != null" >
+        #{urealname,jdbcType=VARCHAR},
+      </if>
+      <if test="usex != null" >
+        #{usex,jdbcType=VARCHAR},
+      </if>
+      <if test="uphone != null" >
+        #{uphone,jdbcType=VARCHAR},
+      </if>
+      <if test="uemail != null" >
+        #{uemail,jdbcType=VARCHAR},
+      </if>
+      <if test="uqq != null" >
+        #{uqq,jdbcType=VARCHAR},
+      </if>
+      <if test="ubirth != null" >
+        #{ubirth,jdbcType=VARCHAR},
+      </if>
+      <if test="roleid != null" >
+        #{roleid,jdbcType=INTEGER},
+      </if>
+      <if test="uidcard != null" >
+        #{uidcard,jdbcType=VARCHAR},
+      </if>
+      <if test="uphoto != null" >
+        #{uphoto,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.ln.film.model.UsersExample" resultType="java.lang.Integer" >
+    select count(*) from users
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update users
+    <set >
+      <if test="record.userid != null" >
+        userid = #{record.userid,jdbcType=INTEGER},
+      </if>
+      <if test="record.username != null" >
+        username = #{record.username,jdbcType=VARCHAR},
+      </if>
+      <if test="record.password != null" >
+        password = #{record.password,jdbcType=VARCHAR},
+      </if>
+      <if test="record.urealname != null" >
+        URealName = #{record.urealname,jdbcType=VARCHAR},
+      </if>
+      <if test="record.usex != null" >
+        USex = #{record.usex,jdbcType=VARCHAR},
+      </if>
+      <if test="record.uphone != null" >
+        UPhone = #{record.uphone,jdbcType=VARCHAR},
+      </if>
+      <if test="record.uemail != null" >
+        UEmail = #{record.uemail,jdbcType=VARCHAR},
+      </if>
+      <if test="record.uqq != null" >
+        Uqq = #{record.uqq,jdbcType=VARCHAR},
+      </if>
+      <if test="record.ubirth != null" >
+        UBirth = #{record.ubirth,jdbcType=VARCHAR},
+      </if>
+      <if test="record.roleid != null" >
+        roleid = #{record.roleid,jdbcType=INTEGER},
+      </if>
+      <if test="record.uidcard != null" >
+        UIDCard = #{record.uidcard,jdbcType=VARCHAR},
+      </if>
+      <if test="record.uphoto != null" >
+        UPhoto = #{record.uphoto,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update users
+    set userid = #{record.userid,jdbcType=INTEGER},
+      username = #{record.username,jdbcType=VARCHAR},
+      password = #{record.password,jdbcType=VARCHAR},
+      URealName = #{record.urealname,jdbcType=VARCHAR},
+      USex = #{record.usex,jdbcType=VARCHAR},
+      UPhone = #{record.uphone,jdbcType=VARCHAR},
+      UEmail = #{record.uemail,jdbcType=VARCHAR},
+      Uqq = #{record.uqq,jdbcType=VARCHAR},
+      UBirth = #{record.ubirth,jdbcType=VARCHAR},
+      roleid = #{record.roleid,jdbcType=INTEGER},
+      UIDCard = #{record.uidcard,jdbcType=VARCHAR},
+      UPhoto = #{record.uphoto,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ln.film.model.Users" >
+    update users
+    <set >
+      <if test="username != null" >
+        username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null" >
+        password = #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="urealname != null" >
+        URealName = #{urealname,jdbcType=VARCHAR},
+      </if>
+      <if test="usex != null" >
+        USex = #{usex,jdbcType=VARCHAR},
+      </if>
+      <if test="uphone != null" >
+        UPhone = #{uphone,jdbcType=VARCHAR},
+      </if>
+      <if test="uemail != null" >
+        UEmail = #{uemail,jdbcType=VARCHAR},
+      </if>
+      <if test="uqq != null" >
+        Uqq = #{uqq,jdbcType=VARCHAR},
+      </if>
+      <if test="ubirth != null" >
+        UBirth = #{ubirth,jdbcType=VARCHAR},
+      </if>
+      <if test="roleid != null" >
+        roleid = #{roleid,jdbcType=INTEGER},
+      </if>
+      <if test="uidcard != null" >
+        UIDCard = #{uidcard,jdbcType=VARCHAR},
+      </if>
+      <if test="uphoto != null" >
+        UPhoto = #{uphoto,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where userid = #{userid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ln.film.model.Users" >
+    update users
+    set username = #{username,jdbcType=VARCHAR},
+      password = #{password,jdbcType=VARCHAR},
+      URealName = #{urealname,jdbcType=VARCHAR},
+      USex = #{usex,jdbcType=VARCHAR},
+      UPhone = #{uphone,jdbcType=VARCHAR},
+      UEmail = #{uemail,jdbcType=VARCHAR},
+      Uqq = #{uqq,jdbcType=VARCHAR},
+      UBirth = #{ubirth,jdbcType=VARCHAR},
+      roleid = #{roleid,jdbcType=INTEGER},
+      UIDCard = #{uidcard,jdbcType=VARCHAR},
+      UPhoto = #{uphoto,jdbcType=VARCHAR}
+    where userid = #{userid,jdbcType=INTEGER}
+  </update>
+</mapper>

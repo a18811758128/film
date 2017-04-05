@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+<head>
+    #parse("head-contents.vm")
+	<link href="/assert/jquery-ui-1.11.4/jquery-ui.css" rel="stylesheet">
+	<script src="/assert/jquery-ui-1.11.4/jquery-ui.js"></script>
+</head>
+<body>
+    #parse("page-header.vm")
+<div class="profile-details">
+    <div class="detail-type">
+        <ul class="type-list">
+            <li class="setting selected"><a>用户设置</a></li>
+            <li class="security"><a>用户安全</a></li>
+        </ul>
+    </div>
+
+    <script>
+        $('.detail-type .type-list li').on("click", function () {
+            $(this).siblings().removeClass("selected");
+            $(this).addClass("selected");
+            if ($(this).hasClass("security")) {
+                $('.basic-details').hide();
+                $('.security-details').show();
+            }
+            else {
+                $('.basic-details').show();
+                $('.security-details').hide();
+            }
+        });
+    </script>
+</div>
+
+<div class="detail-content">
+    <div class="basic-details">
+        <div class="avatar">
+            <img src="$!{user.uphoto}" style="width:128px;">
+            <div class="change-avatar"><a href="/profile/avatar">更改头像</a></div>
+        </div>
+        <div class="detail-table">
+            <form id="settings-form" action="#springUrl('/settings')" method="post">
+                <table>
+                    <tr>
+                        <td class="var">用户ID:</td>
+                        <td class="val">$!{user.userid}</td>
+                    </tr>
+                    <tr>
+                        <td class="var">用户名:</td>
+                        <td class="val">$!{user.username}</td>
+                    </tr>
+                    <tr>
+                        <td class="var">邮箱:</td>
+                        <td class="val">$!{user.uemail}</td>
+                    </tr>
+                    <tr>
+                        <td class="var">联系电话:</td>
+                        <td class="val">$!{user.uphone}</td>
+                    </tr>
+                    <tr>
+                        <td class="var">QQ:</td>
+                        <td class="val"><input type="text" name="uqq" value="#if(${form.uqq})$!{form.uqq}#end"></td>
+                    </tr>
+                    <tr>
+                        <td class="var">生日:</td>
+                        <td class="val"><input id="datepicker" type="text" name="ubirth" readonly="true" value="$!{form.ubirth}"></td>
+                    </tr>
+                    <tr>
+                        <td class="var">性别:</td>
+                        <td class="val">
+							<select id="usex" name="usex">
+								<option value="男" #if($!{user.usex}=="男")selected="true"#end >男</option>
+								<option value="女" #if($!{user.usex}=="女")selected="true"#end>女</option>
+							</select>
+						</td>
+                    </tr>
+                </table>
+            </form>
+            <div class="save-btn"><a href="javascript:void(0)" id="setting-form-save-btn">保存更改</a></div>
+        </div>
+    </div>
+
+    <div class="security-details">
+        <div class="detail-table">
+            <table>
+                <tr>
+                    <td>登录密码</td>
+                    <td class="val">密码要求至少包括字母、符号和数字中的两项且长度超过6位，建议您经常修改密码保证账户安全</td>
+                    <td class="act">
+                        <div class="change-btn"><a href="#springUrl('/password/update')">修改</a></div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+    #parse("page-footer.vm")
+<script>
+    $().ready(function () {
+		$( "#datepicker" ).datepicker({
+            // changeMonth: true,
+            // changeYear: true,
+            dateFormat: "yy-mm-dd",
+			defaultDate:"$!{form.ubirth}"
+        });
+        // for alert dialog
+        var isShowDialog = false;
+        var redirectUrl = '';
+        var errorInput = null;
+        function dialogCallback(code) {
+            isShowDialog = false;
+            if (redirectUrl != '') {
+                window.location.href = redirectUrl;
+            } else if (errorInput != null && errorInput != 'undefined') {
+                errorInput.focus();
+            }
+        }
+        var settingForm = $('#settings-form');
+        var submitSettingForm = function () {
+
+            jQuery.ajax({
+                method: "post",
+                url: "#springUrl('/settings')",
+                data: settingForm.serialize(),
+                error: function (request) {
+                    isShowDialog = tpsAlert("保存失败，请稍后重试.",dialogCallback);
+                },
+                success: function (response) {
+                    if (response.code == 200) {
+                        isShowDialog = tpsAlert("设置信息已成功保存.", dialogCallback);
+                    } else {
+                        isShowDialog = tpsAlert("保存失败，" + response.message, dialogCallback);
+                    }
+                }
+            });
+        };
+        settingForm.submit(function () {
+            submitSettingForm();
+            return false;
+        });
+        $('#setting-form-save-btn').click(function () {
+            submitSettingForm();
+        });
+    });
+</script>
+</body>
+</html>

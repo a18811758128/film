@@ -1,0 +1,46 @@
+            <div class="row clearfix">
+                <div class="col-md-12 column">
+                    <nav class="navbar navbar-default" role="navigation">
+                        <div class="navbar-header">
+                             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1"> <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span></button> <a class="navbar-brand" href="#">管理员管理页面</a>
+                        </div>
+                        
+                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                            <ul class="nav navbar-nav">
+                                #if($navIdx == 1)
+                                <li class="active">
+                                #else
+                                <li>
+                                #end
+                                     <a href="/usermanage/list">帐号管理</a>
+                                </li>
+                                #if($navIdx == 2)
+                                <li class="active">
+                                #else
+                                <li>
+                                #end
+                                     <a href="/usermanage/role">权限赋值</a>
+                                </li>
+
+                                #if($navIdx == 3)
+                                <li class="active">
+                                #else
+                                <li>
+                                #end
+                                     <a href="/film">电影管理</a>
+                                </li>
+                                #if($navIdx == 4)
+                                <li class="active">
+                                #else
+                                <li>
+                                #end
+                                     <a href="/password/update">密码修改</a>
+                                </li>
+                                <li>
+                                    <a href='/'>返回首页</a>
+                                </li>
+                            </ul>
+                    </nav>
+                    
+                </div>
+            </div>

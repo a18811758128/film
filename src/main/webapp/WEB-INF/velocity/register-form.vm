@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+##PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    #parse("head-contents.vm")
+</head>
+<body>
+    #parse("page-header.vm")
+
+<!-- 注册表单 -->
+<div class="portal">
+    <div class="title"><span class="t-c personal selected" d-id="personal"
+                             role="person">个人用户</span></div>
+    <!-- 个人注册表单 -->
+    <div class="p-form" id="personal">
+        <form action='#springUrl("/register")' method="post" id="formPersonal">
+            <div class="p-f-item">
+                <div class="p-f-i"><label class="i-user"></label><input class="p-input" type="text"
+                                                                        placeholder="用户名/邮箱/手机号" id="pName" name="pName" value="$!{form.pName}"/></div>
+                <span></span></div>
+            <div class="p-f-item">
+                <div class="p-f-i">
+                    <label class="i-pwd"></label>
+                    <input class="p-input" type="password" placeholder="请设置密码" id="pPassword" name="pPassword"/>
+                </div>
+                <span class="form-span-tips">密码为6-16位字符，请使用字母、数字或符号的组合</span></div>
+            <div class="p-f-item">
+                <div class="p-f-i"><label class="i-confirm-pwd"></label><input class="p-input" type="password"
+                                                                               placeholder="请重复密码"
+                                                                               id="pConfirmPassword" name="pConfirmPassword"/></div>
+                <span></span></div>
+            <div class="p-f-item">
+                <div class="p-f-i"><label class="i-cellphone"></label><input class="p-input" type="text" placeholder="手机号码"
+                                                                             name="pCPhone" value="$!{form.pCPhone}"/></div>
+            </div>
+            <div class="p-f-item">
+                <div class="p-f-i"><label class="i-realname"></label><input class="p-input" type="text" placeholder="真实姓名"
+                                                                            name="pRName" value="$!{form.pRName}" /></div>
+            </div>
+            <div class="p-f-item">
+                <div class="p-f-i"><label class="i-codenumber"></label><input class="p-input" type="text" placeholder="身份证号"
+                                                                              name="pCNumber" value="$!{form.pCNumber}" /></div>
+            </div>
+            <div class="p-f-item">
+                <div class="p-f-i"><label class="i-mail"></label><input class="p-input" type="text" placeholder="常用邮箱"
+                                                                        id="pMail" name="pMail" value="$!{form.pMail}" /></div>
+                <span class="form-span-tips">请使用常用邮箱，将用于密码找回</span></div>
+            <div class="protocal p-f-item"><input type="checkbox" id="pCheckbox" name="pAcceptRule" #if($form.pAcceptRule) checked #end />
+                我已阅读并接受 <a href="/doc/copyright">版权声明</a>
+                和 <a href="/doc/privacy">隐私保护</a> 条款
+            </div>
+            <div class="p-f-item">
+                <div class="register-btn r-btn-unclick" id="pRegisterBtn">马上注册</div>
+            </div>
+        </form>
+    </div>
+    <!-- 个人注册表单 结束-->
+</div>
+<!-- 注册表单 结束-->
+
+<script>
+    $().ready(function() {
+        var registerForm = sessionStorage.getItem("register-form");
+        // for alert dialog
+        var isShowDialog = false;
+        function dialogCallback(code) {
+            isShowDialog = false;
+            if (errorInput != null && errorInput != 'undefined') {
+                errorInput.focus();
+            }
+        }
+        // 个人注册
+        $('#pRegisterBtn').click(function () {
+            var pForm = $("#formPersonal");
+            var pwd=pForm.find('input[name="pPassword"]').val();
+            var confirmPwd=pForm.find('input[name="pConfirmPassword"]').val();
+            var phoneNumber=pForm.find('input[name="pCPhone"]').val();
+            var email=pForm.find('input[name="pMail"]').val();
+            var acceptRule=document.getElementById('pCheckbox').checked;
+
+            if (!checkEmpty(pForm, "pName", "用户名")) {
+                return;
+            }
+            if(pwd.length < 6){
+                if(pwd == ''){
+                    isShowDialog = tpsAlert("请输入密码",dialogCallback);
+                }else{
+                    isShowDialog = tpsAlert("输入密码不能少于6位",dialogCallback);
+                }
+                errorInput = pForm.find('input[name="pPassword"]');
+                return;
+            } else if(pwd.length > 16) {
+                isShowDialog = tpsAlert("输入密码不能多于16位",dialogCallback);
+                errorInput = pForm.find('input[name="pPassword"]');
+                return;
+            }
+            if(pwd != confirmPwd) {
+                isShowDialog = tpsAlert("两次输入的密码不一致",dialogCallback);
+                errorInput = pForm.find('input[name="pConfirmPassword"]');
+                return;
+            }
+            if (!checkEmpty(pForm, "pCPhone", "手机号码")) {
+                return;
+            }
+            if (!/^(13[0-9]|14[0-9]|15[0-9]|17[0-9]|18[0-9])\d{8}$/i.test(phoneNumber))
+            {
+                isShowDialog = tpsAlert("手机号格式不正确",dialogCallback);
+                errorInput = pForm.find('input[name="pCPhone"]');
+                return;
+            }
+            if (!checkEmpty(pForm, "pRName", "真实姓名")) {
+                return;
+            }
+            if (!checkEmpty(pForm, "pCNumber", "身份证号")) {
+                return;
+            }
+            if (!checkEmpty(pForm, "pMail", "常用邮箱")) {
+                return;
+            }
+            if (!/\w@\w*\.\w/.test(email)) {
+                isShowDialog = tpsAlert("邮箱格式不正确",dialogCallback);
+                errorInput = pForm.find('input[name="pMail"]');
+                return;
+            }
+            if(acceptRule == '' || acceptRule == false) {
+                isShowDialog=tpsAlert('请接受"版权声明"和"隐私条款"',dialogCallback);
+                errorInput = pForm.find('input[name="pAcceptRule"]');
+                return;
+            }
+            pForm.submit();
+        });
+
+
+        function checkEmpty(form, inputName, inputDescription) {
+            var val=form.find('input[name="' + inputName + '"]').val();
+            if(val == '') {
+                isShowDialog=tpsAlert("请输入" + inputDescription,dialogCallback);
+                errorInput = form.find('input[name="' + inputName + '"]');
+                return false;
+            }
+            return true;
+        }
+        #springBind("form")
+        #if($status.errors.hasErrors())
+            // velocity generated codes
+            var error = '';
+            #foreach($f in $status.errors.fieldErrors)
+                #springBind("form.${f.field}")
+                #foreach($e in $status.errorMessages)
+                    error = error + '$!{e}' + ';'
+                #end
+            #end
+            errorInput = null;
+            isShowDialog=tpsAlert(error,dialogCallback);
+        #end
+    });
+</script>
+    #parse("page-footer.vm")
+
+</body>
+</html>

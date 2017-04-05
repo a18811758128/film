@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html ng-app="app">
+  <head>
+  #parse("usermanage/usermanage-head.vm")
+  <script>
+  $(function(){
+  	jQuery.ajax({
+                    url: '/loc/province',
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (data) {
+					var str='';
+					for(var i=0;i<data.data.length;i++){
+                       str+='<option value="'+data.data[i].provinceCode+'">'+
+    					data.data[i].provinceName+'</option>';
+					}
+					 $("#province").html(str);
+					 $("#province option[value='+$userUpdate.provinceCode+']").attr("selected",true);
+                }
+			});
+
+	$("#province").change(function(){
+		var provinceCode=$("#province").val();
+    	jQuery.ajax({
+                        url: '/loc/city/'+provinceCode,
+                        type: 'POST',
+                        dataType: 'json',
+                        success: function (data) {
+    					var str='';
+    					for(var i=0;i<data.data.length;i++){
+                           str+='<option value="'+data.data[i].cityCode+'">'+
+        					data.data[i].cityName+'</option>';
+    					}
+    					 $("#city").html(str);
+						 $("#city option[value='+$userUpdate.cityCode+']").attr("selected",true);
+                    }
+    	});
+	});
+	$("#city").change(function(){
+		var cityCode=$("#city").val();
+    	jQuery.ajax({
+                        url: '/loc/area/'+cityCode,
+                        type: 'POST',
+                        dataType: 'json',
+                        success: function (data) {
+    					var str='';
+    					for(var i=0;i<data.data.length;i++){
+                           str+='<option value="'+data.data[i].areaCode+'">'+
+        					data.data[i].areaName+'</option>';
+    					}
+    					 $("#area").html(str);
+						 $("#area option[value='+$userUpdate.areaCode+']").attr("selected",true);
+                    }
+    	});
+	});
+	});
+  </script>
+  </head>
+	<body>
+		 #parse("usermanage/usermanage-body.vm")
+			<div class="container">
+				<div class="row clearfix">
+					<div class="col-md-12 column">
+					<!-- 信息不全，头像和省市级联未做-->
+						<form role="form" action="/usermanage/updateUser/${userUpdate.userid}" method="post">
+							<div class="form-group">
+								 <label for="userid">用户ID</label>
+									<label id="userid"> $!{userUpdate.userid}</label>
+							</div>
+							<div class="form-group">
+								 <label for="username">用户名</label>
+								 <input type="text" class="	form-control" id="username" name="username" value="$!{userUpdate.username}"/>
+							</div>
+							<div class="form-group">
+								 <label for="password">用户密码</label>
+								 <input type="text" class="form-control" id="password" name="password" />
+							</div>
+							<div class="form-group">
+								 <label for="email">邮箱</label>
+								 <input type="email" class="form-control" id="email" name="email" value="$!{userUpdate.uemail}"/>
+							</div>
+							<div class="form-group">
+								 <label for="mobile">手机号</label>
+								 <input type="text" class="form-control" id="mobile" name="mobile" value="$!{userUpdate.uphone}"/>
+							</div>
+							 <button type="submit" class="btn btn-default">Submit</button>
+						</form>
+					</div>
+				</div>
+			</div>
+	</body>
+</html>

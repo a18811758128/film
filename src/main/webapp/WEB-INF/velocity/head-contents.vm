@@ -1,0 +1,14 @@
+##<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" type="text/css" href="/assert/style/common_demo.css" />
+<link rel="stylesheet" href="/assert/fbmodal/fbmodal.css"/>
+<link href="/favicon.ico" rel="icon" type="image/x-icon" />
+<meta charset="UTF-8">
+<title>地鼠影院</title>
+
+<script type="text/javascript" src="/assert/jquery-1.11.2.min.js"></script>
+<script type="text/javascript" src="/assert/jquery-migrate-1.4.1.js"></script>
+<script type="text/javascript" src="/assert/script/jquery.lazyload.min.js"></script>
+<script type="text/javascript" src="/assert/script/jquery.validate.min.js"></script>
+<script type="text/javascript" src="/assert/script/common_demo.js"></script>
+<script type="text/javascript" src="/assert/fbmodal/jquery.fbmodel.js"></script>
+<script type="text/javascript" src="/assert/script/tps-alert.js"></script>

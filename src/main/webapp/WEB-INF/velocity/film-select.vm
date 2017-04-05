@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    #parse("head-contents.vm")
+	<link rel="stylesheet" href="/assert/style/style.css"/>
+	<link rel="stylesheet" href="/assert/style/slick.css"/>
+	<script src="/assert/script/slick.min.js"></script>
+	<style>
+		#main {
+            margin-left:30px;
+        }
+        .buyblock {
+            width:23%;
+            height:400px;
+            float:left;
+            margin-left:5px;
+            margin-right:5px;
+            margin-top:20px;
+            background-color:white;
+            border:1px solid #ccc;
+            border-top:1px solid #41A0CC;
+            
+        }
+        .filename_block {
+            overflow-y:scroll;
+            overflow-x:hidden;
+            width:100%;
+            height:370px;
+        }
+        .buytitle {
+            width:100%;
+            height:30px;
+            background-color:#41A0CC;
+            color:white;
+            font-weight:bold;
+            font-size:17px;
+            text-align:center;
+            line-height:30px;
+            border-right:1px solid #41A0CC;
+            border-left:1px solid #41A0CC;
+        }
+        .but_p {
+            width:80%;
+            height:50px;
+            background-color:#e5e5e5;
+            color:#888;
+            font-size:17px;
+            text-align:center;
+            margin:30px auto;
+            line-height:50px;
+            cursor:pointer;
+            transition:0.3s all;
+        }
+        .selected_p {
+            border:1px solid #999;
+            
+        }
+            .but_p:hover {
+            color:#00CCFF;
+            }
+        .query_a {
+            width:75px;
+            height:30px;
+            background-color:#ff1202;
+            color:white;
+            font-size:14px;
+            font-weight:bold;
+            text-align:center;
+            line-height:30px;
+            position:relative;
+            top:10px;
+            left:91%;
+            border:none;
+			margin-bottom:20px;
+        }
+         .zhuxiaobtn {
+            width:53px;
+            height:16px;
+            border:none;
+            border-radius:15px;
+            background-color:#fff;
+            color:gray;
+            position:relative;
+            top:1px;
+            left:-10px;
+            cursor:pointer;
+        }
+    </style>
+</head>
+<body>
+    #parse("page-header.vm")
+        <div id="main">
+            <div class="buyblock">
+                <div class="buytitle">放映日期</div>
+                <p class="but_p">
+					今日上映$date.format("yyyy-M-dd",$!{nowdate})
+                    </p>
+            </div>
+        </div>
+        <div id="Div1">
+            <div class="buyblock">
+                <div class="buytitle">影片</div>
+                <div class="filename_block">
+					#foreach($film in $filmList)
+                     <p class="but_p" title="$!{film.fid}">$!{film.ffilmname}</p>
+					 #end
+                 </div>
+            </div>
+        </div>
+        <div id="Div2">
+            <div class="buyblock">
+                <div class="buytitle">时间</div>
+                <div class="time_block">
+                    <p class="but_p" title="10:00">10:00</p>
+                    <p class="but_p" title="14:00">14:00</p>
+                    <p class="but_p" title="20:00">20:00</p>
+                </div>
+            </div>
+        </div>
+        <div id="Div3">
+            <div class="buyblock">
+                <div class="buytitle">版本</div>
+                <div class="version_block">
+                    <p class="but_p">全部</p>
+                    <p class="but_p">2D</p>
+                    <p class="but_p">3D</p>
+                    <p class="but_p">IMAX-3D</p>
+                </div>
+            </div>
+        </div>
+     <button class="query_a">搜索</button>
+<script type="text/javascript">
+$(function () {
+	        $(".filename_block .but_p").click(function () {
+	            
+	            $(".filename_block .but_p").removeClass("selected_p");
+	            $(this).addClass("selected_p");
+	            
+	        });
+	        $(".version_block .but_p").click(function () {
+	            $(".version_block .but_p").removeClass("selected_p");
+	            $(this).addClass("selected_p");
+	        });
+	        $(".time_block .but_p").click(function () {
+	            $(".time_block .but_p").removeClass("selected_p");
+	            $(this).addClass("selected_p");
+	        });
+	        $(".query_a").click(function () {
+	            if ((!$(".filename_block .selected_p").attr("title")) || (!$(".time_block .selected_p").attr("title"))) {
+	                alert("请选择具体电影，具体时间段!");
+	            } else {
+					var tfid=$(".filename_block .selected_p").attr("title");
+					var ttime=$(".time_block .selected_p").attr("title");
+					var tdate="$date.format("yyyy-M-dd",$!{nowdate})";
+					var param={"tfid":tfid,"tdate":tdate,"ttime":ttime};
+    				jQuery.ajax({
+    					url:'/queryfilm',
+    					type:"POST",
+    					data:JSON.stringify(param),
+    					contentType : 'application/json',
+    					dataType:"json",
+    					success:function(r){
+    						if(r.code==200){
+    							window.location='/order/buythefilm?tfid='+tfid+'&ttime='+ttime+'&tdate='+tdate;
+    						}else {
+                                    if (r.message == "login") {
+                                      tpsAlert("请先登录！", function(){window.location = "/login";});
+                                    }
+                                    if (r.message == "tdate") {
+                                        tpsAlert("此电影今日无场次，请选择其他影片！", function(){window.location=window.location;});
+                                    }
+                                    if (r.message == "ttime") {
+                                        tpsAlert("本时间段无场次，请选择其他时间段!", function(){window.location=window.location;});
+                                    }
+    						}
+    					}
+    				});
+	            }
+	        });
+	    })
+</script>
+	#parse("page-footer.vm")
+</body>
+</html>

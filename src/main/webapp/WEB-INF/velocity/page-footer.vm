@@ -1,0 +1,32 @@
+<div class="footer">
+    <div class="footer-wrap">
+        <div class="f-item">
+            <div class="title">关于地鼠影院</div>
+            <ul class="f-ul">
+                <li><a href="">关于我们</a></li>
+                <li><a href="">分享收益</a></li>
+                <li><a href="">授权协议</a></li>
+                <li><a href="">合作单位</a></li>
+				<li><a href="">更多问题</a></li>
+            </ul>
+        </div>
+        <div class="f-item">
+            <div class="title">常见问题</div>
+            <ul class="f-ul">
+                <li><a href="">关于账户</a></li>
+                <li><a href="">关于版权</a></li>
+                <li><a href="">关于购买</a></li>
+                <li><a href="">关于下载</a></li>
+                <li><a href="">关于退款</a></li>
+            </ul>
+        </div>
+        <div class="f-item no-border-right">
+            <div class="title">联系我们</div>
+            <div class="phone">400-1234-123</div>
+            <div class="kefu">在线客服</div>
+        </div>
+    </div>
+    <div class="f-bottom">
+    </div>
+    <div class="alert" style="display:none;"></div>
+</div>

@@ -1,0 +1,71 @@
+#if(!$!session.getAttribute("hasLogin") )
+<li class="li-relative"><a href="/login" class="orange pop-window">登录</a>
+
+    <div class="pop-login">
+        <div class="pop-login-wrap">
+            <div class="pop-login-main">
+                <form id="pop-form-login" method="post">
+                    <div class="input-wrap">
+                        <div class="p-l-item border-bottom"><i class="user"></i><input class="pop-input"
+                                                                                       type="text"
+                                                                                       name="username"
+                                                                                       placeholder="用户名/邮箱/手机"/>
+                        </div>
+                        <div class="p-l-item"><i class="password"></i><input class="pop-input"
+                                                                             type="password"
+                                                                             name="password"
+                                                                             placeholder="密码"/></div>
+                    </div>
+                    <button type="submit" class="p-l-btn">登 录</button>
+                    <a class="pop-forget-pwd" href="#springUrl("/password/forget")">忘记密码</a>
+                </form>
+            </div>
+            <div class="coperate-login">
+                <a class="btn weibo" href="javascript:void(0)"><i
+                        class="i-weibo"></i><span>使用新浪微博登录</span></a>
+                <a class="btn qq" href="javascript:void(0)"><i
+                        class="i-qq"></i><span>使用腾讯QQ登录</span></a>
+                <a class="btn weixin" href="javascript:void(0)"><i
+                        class="i-weixin"></i><span>使用微信登录</span></a>
+            </div>
+            <div class="pop-arrow"></div>
+        </div>
+    </div>
+</li>
+<li class="seprate">|</li>
+<li><a href="/register">注册</a></li>
+#else
+<li class="li-relative">
+<a href="/profile/" class="pop-window"><i
+        class="icon user"></i>$!session.getAttribute("user").username</a>
+    <div class="pop-user-center">
+        <div class="pop-user-center-wrap">
+            <div class="pop-user-center-main">
+				##if($!session.getAttribute("role").accessLevel>=8)
+				##	<a href="/usermanage/showmanage" class="pop-window">管理页面</a>
+				##end
+                <a href="/order/list">我的订单</a>
+                <a href="#">购物车<span id="head-cart-item-count"></span></a>
+                <a href="#">系统消息<span style="color:red;">(0)</span></a>
+                <a href="/settings/">设置</a>
+                <a href="/logout">退出登录</a>
+            </div>
+            <div class="pop-arrow"></div>
+        </div>
+    </div>
+</li>
+<li class="seprate">|</li>
+<li><a href="#">我的收藏</a></li>
+#end
+<script>
+    $("#pop-form-login").submit(function (eve) {
+        eve.preventDefault();
+        jQuery.post("/login.ajax", $('#pop-form-login').serialize(), function (result) {
+            if (result.code == 200) {
+                window.location.href= result.message;
+            } else {
+                tpsAlert("登录失败!");
+            }
+        });
+    });
+</script>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+##PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    #parse("head-contents.vm")
+</head>
+<body>
+    #parse("page-header.vm")
+<!-- 登录表单 -->
+<div class="portal">
+    <!-- 登录部分 -->
+    <div class="login">
+        <!-- 登录表单 -->
+        <div class="login-left">
+            <div class="p-form">
+                <form action='#springUrl("/login")' id="form-login" method="post">
+                    <div class="p-f-item">
+                        <div class="p-f-i"><label class="i-user"></label>
+                            <input class="p-input" type="text" name="username" placeholder="用户名/邮箱/手机号" value="$!{form.username}"/></div>
+                        <span></span></div>
+                    <div class="p-f-item">
+                        <div class="p-f-i"><label class="i-pwd"></label>
+                            <input class="p-input" type="password" name="password" placeholder="密码"/></div>
+                        <span></span></div>
+                    <input type="hidden" name="returnurl" value="$!{form.returnurl}" />
+                    <div class="r-f-btn">
+                        <div class="r-f-link"><a href='#springUrl("/register")'>注册</a><span>|</span><a href="#springUrl("/password/forget")">忘记密码</a>
+                        </div>
+                        <a href="javascript:void(0)" class="login-btn l-btn-unclick" id="form-login-submit"></a>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- 第三方登录 -->
+        <div class="login-right">
+            <div class="title">第三方登录</div>
+            <div class="coperate-login">
+                <a class="btn weibo" href="javascript:void(0)"><i class="i-weibo"></i><span>使用新浪微博登录</span></a>
+                <a class="btn qq" href="javascript:void(0)"><i class="i-qq"></i><span>使用腾讯QQ登录</span></a>
+                <a class="btn weixin" href="javascript:void(0)"><i class="i-weixin"></i><span>使用微信登录</span></a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 登录表单结束 -->
+
+<script>
+    $(function(){
+        // for alert dialog
+        var isShowDialog = false;
+        function dialogCallback(code) {
+            isShowDialog = false;
+            if (errorInput != null && errorInput != 'undefined') {
+                errorInput.focus();
+            }
+        }
+        $('input').keydown(function(e){
+            if(e.keyCode==13){
+                login();
+                $(this).blur();
+            }
+            return true;
+        });
+        $('#form-login-submit').click(function () {
+            login();
+        });
+
+        function login() {
+            var form = $("#form-login");
+            var username=form.find('input[name="username"]').val();
+            var password=form.find('input[name="password"]').val();
+            if (!checkEmpty(form, "username", "用户名")) {
+                return;
+            }
+            if (!checkEmpty(form, "password", "密码")) {
+                return;
+            }
+            form.submit();
+        }
+
+        function checkEmpty(form, inputName, inputDescription) {
+            var val=form.find('input[name="' + inputName + '"]').val();
+            if(val == '') {
+                isShowDialog=tpsAlert("请输入" + inputDescription,dialogCallback);
+                errorInput = form.find('input[name="' + inputName + '"]');
+                return false;
+            }
+            return true;
+        }
+        #springBind("form")
+        #if($status.errors.hasErrors())
+            // velocity generated codes
+            var error = '';
+            #foreach($e in $status.errorMessages)
+                error = error + '$!{e}' + ';'
+            #end
+            #foreach($f in $status.errors.fieldErrors)
+                #springBind("form.${f.field}")
+                #foreach($e in $status.errorMessages)
+                    error = error + '$!{e}' + ';'
+                #end
+            #end
+            errorInput = $("#form-login").find('input[name="username"]');
+            isShowDialog=tpsAlert(error,dialogCallback);
+        #end
+    });
+</script>
+
+    #parse("page-footer.vm")
+</body>
+</html>
+

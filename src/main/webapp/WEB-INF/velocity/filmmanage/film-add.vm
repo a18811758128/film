@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html ng-app="app">
+  <head>
+  #parse("usermanage/usermanage-head.vm")
+  </head>
+	<body>
+		 #parse("usermanage/usermanage-body.vm")
+		 <div class="container">
+				<div class="row clearfix">
+					<div class="col-md-12 column">
+					<!-- 信息不全，头像和省市级联未做-->
+						<form role="form" action="/film/addFilm" method="post" enctype="multipart/form-data">
+							<div class="form-group">
+								 <label for="ffilmname">电影名</label>
+								 <input type="text" class="	form-control" id="ffilmname" name="ffilmname" value="$!{filmUpdate.ffilmname}"/>
+							</div>
+							<div class="form-group">
+								 <label for="fsortid">电影类别</label>
+								 <select id="fsortid" name="fsortid">
+								 #foreach($sort in ${sortList})
+								 <option value=$!{sort.sid}>$!{sort.ssort}</option>
+								 #end
+								 </select>
+							</div>
+							<div class="form-group">
+								 <label for="faid">区域</label>
+								 <select id="faid" name="faid">
+								 #foreach($area in ${areaList})
+								 <option value=$!{area.aid}>$!{area.azone}</option>
+								 #end
+								 </select>
+							</div>
+							<div class="form-group">
+								 <label for="fdiretor">导演</label>
+								 <input type="text" class="form-control" id="fdiretor" name="fdiretor" value="$!{filmUpdate.fdiretor}"/>
+							</div>
+							<div class="form-group">
+								 <label for="fplay">演员</label>
+								 <input type="text" class="form-control" id="fplay" name="fplay" value="$!{filmUpdate.fplay}"/>
+							</div>
+							<div class="form-group">
+								 <label for="fintro">简介</label>
+								 <input type="text" class="form-control" id="fintro" name="fintro" value="$!{filmUpdate.fintro}"/>
+							</div>
+							<div class="form-group">
+								 <label for="flanguage">语言</label>
+								 <input type="text" class="form-control" id="flanguage" name="flanguage" value="$!{filmUpdate.flanguage}"/>
+							</div>
+							<div class="form-group">
+								 <label for="flong">时长</label>
+								 <input type="text" class="form-control" id="flong" name="flong" value="$!{filmUpdate.flong}"/>
+							</div>
+							<div class="form-group">
+								 <label for="fprice">价格</label>
+								 <input type="text" class="form-control" id="fprice" name="fprice" value="$!{filmUpdate.fprice}"/>
+							</div>
+							<div class="form-group">
+								 <label for="ftype">类型</label>
+								 <input type="text" class="form-control" id="ftype" name="ftype" value="$!{filmUpdate.ftype}"/>
+							</div>
+							<div class="form-group">
+								 <label for="photoup">图片</label>
+								 <input type="file" class="form-control" id="photoup" name="photoup" value="$!{filmUpdate.fphoto}"/>
+							</div>
+							<div class="form-group">
+								 <label for="videoup">预告片</label>
+								 <input type="file" class="form-control" id="videoup" name="videoup" value="$!{filmUpdate.fvideo}"/>
+							</div>
+							 <button type="submit" class="btn btn-default">Submit</button>
+						</form>
+					</div>
+				</div>
+			</div>
+	</body>
+</html>

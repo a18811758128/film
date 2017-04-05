@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    #parse("head-contents.vm")
+    <link href="/assert/file-upload/uploadfile.css" rel="stylesheet">
+    <link href="/assert/jquery-ui-1.11.4/jquery-ui.css" rel="stylesheet">
+    <script src="/assert/file-upload/jquery.uploadfile.js"></script>
+    <script src="/assert/jquery-ui-1.11.4/jquery-ui.js"></script>
+</head>
+<body>
+    #parse("page-header.vm")
+
+<div class="detail-content">
+    <div class="basic-details" style="text-align:center;">
+        <div class="detail-table" style="text-align:center;">
+            <img src="$!{user.avatarUrl}" style="margin-left:auto; margin-right:auto;width:256px;">
+            <div id="fileuploader">选择文件</div>
+            <div class="save-btn"><a href="javascript:void(0)" id="setting-form-save-btn">上传</a></div>
+        </div>
+    </div>
+
+    <div class="security-details">
+    </div>
+
+</div>
+    #parse("page-footer.vm")
+<script>
+    $().ready(function () {
+        // for alert dialog
+        var isShowDialog = false;
+        var redirectUrl = '';
+        function dialogCallback(code) {
+            isShowDialog = false;
+            if (redirectUrl != '') {
+                window.location.href = redirectUrl;
+            } else if (errorInput != null && errorInput != 'undefined') {
+                errorInput.focus();
+            }
+        }
+        var fileUploader = $("#fileuploader").uploadFile({
+            url:"/avatar/set",
+            uploadStr:"浏览",
+            cancelStr:"取消",
+            abortStr:"取消",
+            fileName:"file",
+            multiple:false,
+            allowDuplicates:false,
+            nestedForms:false,
+            returnType:"json",
+            autoSubmit:false,
+            showFileCounter:false,
+            dragdropWidth:'100%',
+            customProgressBar: function(obj,s)
+            {
+                this.statusbar = $("<div class='ajax-file-upload-statusbar'></div>");
+                this.preview = $("<img class='ajax-file-upload-preview' />").width(s.previewWidth).height(s.previewHeight).appendTo(this.statusbar).hide();
+                this.filename = $("<div class='ajax-file-upload-filename'></div>").appendTo(this.statusbar);
+                this.progressDiv = $("<div class='ajax-file-upload-progress'>").appendTo(this.statusbar).hide();
+                this.progressbar = $("<div class='ajax-file-upload-bar'></div>").appendTo(this.progressDiv);
+                this.abort = $("<div><span class='uploading-caption'>文件上传中...</span><span class='abort-caption'>" + s.abortStr + "<span></div>").appendTo(this.statusbar).hide();
+                this.cancel = $("<div class='ajax-file-upload-cancel'>" + s.cancelStr + "</div>").appendTo(this.statusbar).hide();
+                this.done = $("<div>" + s.doneStr + "</div>").appendTo(this.statusbar).hide();
+                this.download = $("<div>" + s.downloadStr + "</div>").appendTo(this.statusbar).hide();
+                this.del = $("<div>" + s.deletelStr + "</div>").appendTo(this.statusbar).hide();
+                this.done.addClass("custom-green");
+                this.download.addClass("custom-green");
+                this.cancel.addClass("custom-red");
+                this.del.addClass("custom-red");
+                $(this).hide();
+                return this;
+            },
+            onLoad:function(obj)
+            {
+                console.info("fileuploader onload:" + obj);
+                $(".ajax-upload-dragdrop span").html("");
+            },
+            onSelect:function(files)
+            {
+                files[0].name;
+                files[0].size;
+                var size = 0;
+                if (files[0].size < 1024) {
+                    size = files[0].size + ' B';
+                } else if (files[0].size < 1024*1024) {
+                    size = Math.round(files[0].size/1024) + ' KB';
+                } else {
+                    size = Math.round(files[0].size/1024/1024) + ' MB'
+                }
+                var fileName = files[0].name + ' (' + size + ')';
+                $(".ajax-upload-dragdrop span").html(fileName);
+                $(".ajax-file-upload-container").html();
+                return true; //to allow file submission.
+            },
+            onSubmit:function(files)
+            {
+                console.log("submit: " + files);
+            },
+            onSuccess:function(files,data,xhr,pd)
+            {
+                console.log("success:" + JSON.stringify(data));
+                if (data.code == 200) {
+                    redirectUrl = "/settings/";
+                    isShowDialog=tpsAlert("修改成功!",dialogCallback);
+                } else if (data.code==-2 && data.message=='login') {
+                    window.location.href="/login?returnurl=/material/upload";
+                }
+            },
+            afterUploadAll:function(obj)
+            {
+                console.log("after upload all:" + obj);
+            },
+            onError: function(files,status,errMsg,pd)
+            {
+                //debugger;
+                console.log("error: " + files);
+            },
+            onCancel:function(files,pd)
+            {
+                console.log("cancel:" + JSON.stringify(files));
+            }
+        });
+
+        $('#setting-form-save-btn').click(function () {
+            if ($(".ajax-upload-dragdrop span").html() == '') {
+                isShowDialog = tpsAlert("请先选择要上传的文件",dialogCallback);
+                errorInput = $(".ajax-upload-dragdrop span");
+                return;
+            }
+            fileUploader.startUpload();
+        });
+    });
+</script>
+</body>
+</html>

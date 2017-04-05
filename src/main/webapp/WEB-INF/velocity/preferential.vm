@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+    #parse("head-contents.vm")
+	<link rel="stylesheet" href="/assert/style/style.css"/>
+	<link rel="stylesheet" href="/assert/style/slick.css"/>
+	<script src="/assert/script/slick.min.js"></script>
+	<style>
+		#yh_main {
+            width:1200px;
+            height:650px;
+            margin:10px auto;
+        }
+        .hd_block {
+            width:450px;
+            height:240px;
+            display:inline-block;
+            margin:20px 70px;
+        }
+        .jxz {
+            position:relative;
+            top:-233px;
+            left:0px;
+        }
+    </style>
+</head>
+<body>
+    #parse("page-header.vm")
+	<div id="yh_main">
+            <div class="hd_block">
+                
+                <img src="/assert/images/h1.jpg" class="hpic" />
+                <img src="/assert/images/jxz.png" class="jxz"/>
+            </div>
+            <div class="hd_block">
+                <img src="/assert/images/h2.jpg" class="hpic" />
+                <img src="/assert/images/jxz.png" class="jxz"/>
+            </div>
+            <div class="hd_block">
+                <img src="/assert/images/h3.jpg" class="hpic" />
+                <img src="/assert/images/jxz.png" class="jxz"/>
+            </div>
+            <div class="hd_block">
+                <img src="/assert/images/h4.jpg" class="hpic" />
+                <img src="/assert/images/jxz.png" class="jxz"/>
+            </div>
+        </div>
+<script type="text/javascript">
+$(function(){
+	$(".film_block").each(function (index, elem) {
+	            $(elem).mouseenter(function () {
+	                $(elem).find(".containers").fadeIn(200);
+	            });
+	            $(elem).mouseleave(function () {
+	                $(elem).find(".containers").fadeOut(200);
+	            });
+	        });
+	        $(".film_block2").each(function (index, elem) {
+	            $(elem).mouseenter(function () {
+	                $(elem).find(".containers").fadeIn(200);
+	            });
+	            $(elem).mouseleave(function () {
+	                $(elem).find(".containers").fadeOut(200);
+	            });
+	        });
+	        $(".detail_pic").mouseenter(function () {
+	            $(this).attr("src", "/assert/images/Movies.png");
+	        });
+	        $(".detail_pic").mouseleave(function () {
+	            $(this).attr("src", "/assert/images/movie.png");
+	        });
+	        $(".buy_pic").mouseenter(function () {
+	            $(this).attr("src", "/assert/images/Shop.png");
+	        });
+	        $(".buy_pic").mouseleave(function () {
+	            $(this).attr("src", "/assert/images/Shops.png");
+	        });
+	        $("#tishi>span").click(function () {
+	            $("#tishi").slideUp();
+	        });
+			
+			$('.slick').slick({
+      			 dots: true,
+				 autoplay:true,
+				 arrows:true
+   			 });
+});
+</script>
+	#parse("page-footer.vm")
+</body>
+</html>

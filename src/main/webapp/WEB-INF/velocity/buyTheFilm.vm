@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+    #parse("head-contents.vm")
+	<link rel="stylesheet" href="/assert/style/style.css"/>
+	<link rel="stylesheet" href="/assert/style/slick.css"/>
+	<script src="/assert/script/slick.min.js"></script>
+	<link href="/assert/bootstrap-template/bootstrap.min.css" rel="stylesheet">
+    <script src="/assert/bootstrap-template/angular.js"></script>
+    <script src="/assert/script/admin/client-api.js"></script>
+    <script src="/assert/bootstrap-template/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/assert/script/bootstrap-paginator.min.js"></script>
+	<style>
+    </style>
+</head>
+<body>
+    #parse("page-header.vm")
+	<div class="container">
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<table class="table" >
+				<thead>
+					<tr>
+						<th>
+							电影ID
+						</th>
+						<th>
+							电影名
+						</th>
+						<th>
+							放映日期
+						</th>
+						<th>
+							放映时间
+						</th>
+						<th>
+							演播厅
+						</th>
+						<th>
+							单价
+						</th>
+						<th>
+							操作
+						</th>
+					</tr>
+				</thead>
+				<tbody id="filminfo">
+					#foreach($timetable in $timetableList)
+					<tr>
+						<td>
+							$!{film.fid}
+						</td>
+						<td>
+							$!{film.ffilmname}
+						</td>
+						<td>
+							$date.format("yyyy-M-dd",$!{timetable.tdate})
+						</td>
+						<td>
+							$date.format("HH:mm",$!{timetable.ttime})
+						</td>
+						<td>
+							#foreach($hall in $hallList)
+								#if($!{timetable.thallid}==$hall.hid)
+									$!{hall.hhall}
+								#end
+							#end
+						</td>
+						<td>
+							$!{film.fprice}
+						</td>
+						<td>
+							<a href='/order/selectSeat?tid=$!{timetable.tid}&price=$!{film.fprice}'>选座</a>
+						</td>
+					</tr>
+					#end
+				</tbody>
+				<tfoot>
+				</tfoot>
+			</table>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+</script>
+	#parse("page-footer.vm")
+</body>
+</html>

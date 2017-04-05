@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html ng-app="app">
+  <head>
+  #parse("usermanage/usermanage-head.vm")
+  <link rel="stylesheet" type="text/css" href="/assert/style/jPages.css" />
+    <link rel="stylesheet" type="text/css" href="/assert/style/tcal.css" />
+    <link rel="stylesheet" type="text/css" href="/assert/style/jquery.page.css" />
+    <script type="text/javascript" src="/assert/script/jPages.js"></script>
+    <script type="text/javascript" src="/assert/script/tcal.js"></script>
+    <script type="text/javascript" src="/assert/script/jquery.page.js"></script>
+    <script>
+  </script>
+  </head>
+	<body>
+<div class="container">
+		 #parse("usermanage/usermanage-body.vm")
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<table class="table" >
+				<thead>
+					<tr>
+						<th>
+							用户ID
+						</th>
+						<th>
+							用户名
+						</th>
+						<th>
+							邮箱
+						</th>
+						<th>
+							手机
+						</th>
+						<th>
+							真实姓名
+						</th>
+						<th>
+							身份证号
+						</th>
+						<th>
+							操作
+						</th>
+					</tr>
+				</thead>
+				<tbody id="userList">
+				#foreach($user in $userList)
+					<tr>
+						<td>
+							$!{user.userid}
+						</td>
+						<td>
+							$!{user.username}
+						</td>
+						<td>
+							$!{user.uemail}
+						</td>
+						<td>
+							$!{user.uphone}
+						</td>
+						<td>
+							$!{user.urealname}
+						</td>
+						<td>
+							$!{user.uidcard}
+						</td>
+						<td>
+							<a href='/usermanage/update?userid=$!{user.userid}'>修改</a>
+							|<a href='/usermanage/delete?userid=$!{user.userid}' onClick="return confirm('确定删除?');">删除</a>
+						</td>
+					</tr>
+				#end	
+				</tbody>
+				<tfoot>
+				<a href='/usermanage/add' style='color:red'>新增用户</a>
+				</tfoot>
+			</table>
+			<div class="holder"></div>
+		</div>
+	</div>
+</div>
+	</body>
+	<script charset="utf-8">
+	$("div.holder").jPages({
+            containerID: "userList",
+            perPage: 10,
+            previous: "《",
+            next: "》",
+        });
+    </script>
+</html>

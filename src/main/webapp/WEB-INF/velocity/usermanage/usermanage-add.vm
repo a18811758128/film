@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html ng-app="app">
+  <head>
+  #parse("usermanage/usermanage-head.vm")
+  </head>
+	<body>
+		 #parse("usermanage/usermanage-body.vm")
+		 <div class="container">
+				<div class="row clearfix">
+					<div class="col-md-12 column">
+					<!-- 信息不全，头像和省市级联未做-->
+						<form role="form" action="/usermanage/addUser" method="post">
+							<div class="form-group">
+								 <label for="username">用户名</label>
+								 <input type="text" class="	form-control" id="username" name="username" />
+							</div>
+							<div class="form-group">
+								 <label for="password">用户密码</label>
+								 <input type="text" class="form-control" id="password" name="password" />
+							</div>
+							<div class="form-group">
+								 <label for="email">邮箱</label>
+								 <input type="email" class="form-control" id="email" name="email" />
+							</div>
+							<div class="form-group">
+								 <label for="mobile">手机号</label>
+								 <input type="text" class="form-control" id="mobile" name="mobile" />
+							</div>
+							<div class="form-group">
+								 <label for="role">权限</label>
+                                 <select id="role" name="role">
+								  #foreach($rolea in ${roleList})
+								 <option value=$!{rolea.roleid}>$!{rolea.displayName}</option>
+								  #end
+								  </select>
+							</div>
+							<div class="form-group">
+								 <label for="realname">真实姓名</label>
+								 <input type="text" class="form-control" id="realname" name="realname" />
+							</div>
+							<div class="form-group">
+								 <label for="idCardNo">身份证号</label>
+								 <input type="text" class="form-control" id="idCardNo" name="idCardNo" />
+							</div>
+							 <button type="submit" class="btn btn-default">Submit</button>
+						</form>
+					</div>
+				</div>
+			</div>
+	</body>
+</html>

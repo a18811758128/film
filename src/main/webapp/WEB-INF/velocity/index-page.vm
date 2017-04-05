@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    #parse("head-contents.vm")
+	<link rel="stylesheet" href="/assert/style/style.css"/>
+	<link rel="stylesheet" href="/assert/style/slick.css"/>
+	<script src="/assert/script/slick.min.js"></script>
+</head>
+<body>
+    #parse("page-header.vm")
+	
+	<div class="slick">
+    <div><a href="#"><img src="/assert/images/fonz1.jpg" alt="" height="400px" width="560px"></a></div>
+    <div><a href="#"><img src="/assert/images/fonz2.jpg" alt="" height="400px" width="560px"></a></div>
+    <div><a href="#"><img src="/assert/images/fonz3.jpg" alt="" height="400px" width="560px"></a></div>
+</div>
+
+<div id="main">
+		<div id="left_block">
+			<div class="item_title">
+				正在热映
+			</div>
+			<div class="film_show_block">
+				#if($filmList.isEmpty())
+					<h4>对不起，暂无影片!</h4>
+				#else
+					#foreach($film in $filmList)
+                    <div class="film_block">
+    					<img class="film_img" src="$film.fphoto"/>
+    					<div class="film_info">$film.ffilmname</div>
+    					<div class="containers">
+    						<a href="/preview/showfilm?fid=$film.fid" target="_blank"><img src="/assert/images/movie.png" class="detail_pic" title="查看影片详情"/></a>
+    						<a href="buymovies.aspx" target="_blank"><img src="/assert/images/Shops.png" class="buy_pic" title="购票"/></a>
+    					</div>
+    				</div>
+					#end
+				#end
+			</div>
+		</div>
+</div>
+<script type="text/javascript">
+$(function(){
+	$(".film_block").each(function (index, elem) {
+	            $(elem).mouseenter(function () {
+	                $(elem).find(".containers").fadeIn(200);
+	            });
+	            $(elem).mouseleave(function () {
+	                $(elem).find(".containers").fadeOut(200);
+	            });
+	        });
+	        $(".film_block2").each(function (index, elem) {
+	            $(elem).mouseenter(function () {
+	                $(elem).find(".containers").fadeIn(200);
+	            });
+	            $(elem).mouseleave(function () {
+	                $(elem).find(".containers").fadeOut(200);
+	            });
+	        });
+	        $(".detail_pic").mouseenter(function () {
+	            $(this).attr("src", "/assert/images/Movies.png");
+	        });
+	        $(".detail_pic").mouseleave(function () {
+	            $(this).attr("src", "/assert/images/movie.png");
+	        });
+	        $(".buy_pic").mouseenter(function () {
+	            $(this).attr("src", "/assert/images/Shop.png");
+	        });
+	        $(".buy_pic").mouseleave(function () {
+	            $(this).attr("src", "/assert/images/Shops.png");
+	        });
+	        $("#tishi>span").click(function () {
+	            $("#tishi").slideUp();
+	        });
+			
+			$('.slick').slick({
+      			 dots: true,
+				 autoplay:true,
+				 arrows:true
+   			 });
+});
+</script>
+	#parse("page-footer.vm")
+</body>
+</html>

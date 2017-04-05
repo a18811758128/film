@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:task="http://www.springframework.org/schema/task"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+    http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-3.0.xsd">
+
+    <bean id="propertyConfigurer"
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:config.properties" />
+        <property name="fileEncoding" value="UTF-8" />
+        <property name="ignoreUnresolvablePlaceholders" value="true" />
+    </bean>
+
+    <!--<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" 
+        destroy-method="close"> -->
+    <!--<property name="driverClass" value="${driver}"/> -->
+    <!--<property name="jdbcUrl"> -->
+    <!--<value><![CDATA[${url}]]></value> -->
+    <!--</property> -->
+    <!--<property name="user" value="${username}"/> -->
+    <!--<property name="password" value="${password}"/> -->
+    <!--<property name="initialPoolSize" value="10"/> -->
+    <!--<property name="maxPoolSize" value="50"/> -->
+    <!--<property name="testConnectionOnCheckout" value="true"/> -->
+    <!--<property name="preferredTestQuery" value="select 1"/> -->
+    <!--</bean> -->
+
+    <!--<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> -->
+    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+        <property name="driverClassName" value="${driver}" />
+        <property name="url" value="${url}" />
+        <property name="username" value="${username}" />
+        <property name="password" value="${password}" />
+    </bean>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <property name="mapperLocations" value="classpath*:mapper/*.xml" />
+    </bean>
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.ln.film.dao" />
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+        <property name="annotationClass"
+            value="org.springframework.stereotype.Repository" />
+    </bean>
+
+    <!--Async -->
+    <task:annotation-driven />
+
+    <!--password encoder -->
+<!--     <bean id="passwordEncoder" -->
+<!--         class="com.ln.film.components.bcrypt.BCryptPasswordEncoder" /> -->
+
+    <bean id="multipartResolver"
+        class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="maxUploadSize">
+            <!-- 128MB by default -->
+            <!-- 注意maxUploadSize属性的限制不是针对单个文件，而是所有文件的容量之和!! -->
+            <value>200000000000</value>
+        </property>
+        <property name="defaultEncoding">
+            <value>UTF-8</value>
+        </property>
+    </bean>
+</beans>

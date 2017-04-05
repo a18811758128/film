@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html ng-app="app">
+  <head>
+  #parse("usermanage/usermanage-head.vm")
+  <link rel="stylesheet" type="text/css" href="/assert/style/jPages.css" />
+    <link rel="stylesheet" type="text/css" href="/assert/style/tcal.css" />
+    <link rel="stylesheet" type="text/css" href="/assert/style/jquery.page.css" />
+    <script type="text/javascript" src="/assert/script/jPages.js"></script>
+    <script type="text/javascript" src="/assert/script/tcal.js"></script>
+    <script type="text/javascript" src="/assert/script/jquery.page.js"></script>
+  </head>
+	<body>
+<div class="container">
+		 #parse("usermanage/usermanage-body.vm")
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>
+							用户ID
+						</th>
+						<th>
+							用户名
+						</th>
+						<th>
+							用户权限
+						</th>
+						<th>
+							操作
+						</th>
+					</tr>
+				</thead>
+				<tbody id="roleList">
+				#foreach($user in $userList)
+					<tr>
+						<td>
+							$!{user.userid}
+						</td>
+						<td>
+							$!{user.username}
+						</td>
+						<td>
+						#foreach($role in $roleList)
+							#if($!{role.roleid}==$!{user.roleid})
+								$!{role.displayName}
+							#end
+						#end
+						</td>
+						<td>
+							<a href='/usermanage/update?userid=$!{user.userid}&ur=1'>修改</a>
+						</td>
+					</tr>
+				#end	
+				</tbody>
+				<tfoot>
+				</tfoot>
+			</table>
+			<div class="holder"></div>
+		</div>
+	</div>
+</div>
+	</body>
+	<script charset="utf-8">
+	$("div.holder").jPages({
+            containerID: "roleList",
+            perPage: 10,
+            previous: "《",
+            next: "》",
+        });
+    </script>
+</html>

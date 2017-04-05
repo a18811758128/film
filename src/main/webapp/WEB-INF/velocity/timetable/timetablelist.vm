@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html ng-app="app">
+  <head>
+  #parse("usermanage/usermanage-head.vm")
+  <link rel="stylesheet" type="text/css" href="/assert/style/jPages.css" />
+    <link rel="stylesheet" type="text/css" href="/assert/style/tcal.css" />
+    <link rel="stylesheet" type="text/css" href="/assert/style/jquery.page.css" />
+    <script type="text/javascript" src="/assert/script/jPages.js"></script>
+    <script type="text/javascript" src="/assert/script/tcal.js"></script>
+    <script type="text/javascript" src="/assert/script/jquery.page.js"></script>
+    <script>
+  </script>
+  </head>
+	<body>
+<div class="container">
+		 #parse("usermanage/usermanage-body.vm")
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<table class="table" >
+				<thead>
+					<tr>
+						<th>
+							场次ID
+						</th>
+						<th>
+							电影名
+						</th>
+						<th>
+							大厅
+						</th>
+						<th>
+							日期
+						</th>
+						<th>
+							时间
+						</th>
+					</tr>
+				</thead>
+				<tbody id="userList">
+				#foreach($timetable in $timetableList)
+					<tr>
+						<td>
+							$!{timetable.tid}
+						</td>
+						<td>
+							#foreach($film in $filmList)
+								#if($!{timetable.tfid}==$!{film.fid})
+									$!{film.ffilmname}
+								#end
+							#end
+						</td>
+						<td>
+							#foreach($hall in $hallList)
+								#if($!{timetable.thallid}==$!{hall.hid})
+									$!{hall.hhall}
+								#end
+							#end
+						</td>
+						<td>
+							$date.format("yyyy-M-dd", $!{timetable.tdate})
+						</td>
+						<td>
+							$date.format("HH:mm", $!{timetable.ttime})
+						</td>
+						<td>
+							<a href='/timetable/update?tid=$!{timetable.tid}'>修改</a>
+							|<a href='/timetable/delete?tid=$!{timetable.tid}' onClick="return confirm('确定删除?');">删除</a>
+						</td>
+					</tr>
+				#end	
+				</tbody>
+				<tfoot>
+					<a href='/timetable/add' style='color:red'>新增场次</a>
+				</tfoot>
+			</table>
+			<div class="holder"></div>
+		</div>
+	</div>
+</div>
+	</body>
+	<script charset="utf-8">
+	$("div.holder").jPages({
+            containerID: "userList",
+            perPage: 10,
+            previous: "《",
+            next: "》",
+        });
+    </script>
+</html>

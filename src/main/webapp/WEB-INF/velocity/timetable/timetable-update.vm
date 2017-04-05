@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html ng-app="app">
+  <head>
+  #parse("usermanage/usermanage-head.vm")
+  <link href="/assert/jquery-ui-1.11.4/jquery-ui.css" rel="stylesheet">
+  <script src="/assert/jquery-ui-1.11.4/jquery-ui.js"></script>
+  </head>
+	<body>
+		 #parse("usermanage/usermanage-body.vm")
+		 <div class="container">
+				<div class="row clearfix">
+					<div class="col-md-12 column">
+						<form role="form" action="/timetable/updateTimetable/$!{tid}" method="post">
+							<div class="form-group">
+								 <label for="tid">场次ID</label>
+									<label id="tid"> $!{tid}</label>
+							</div>
+							<div class="form-group">
+								 <label for="tfid">电影名字</label>
+								 <select id="tfid" name="tfid">
+								 #foreach($film in ${filmList})
+								 <option value=$!{film.fid}>$!{film.ffilmname}</option>
+								 #end
+								 </select>
+							</div>
+							<div class="form-group">
+								 <label for="thallid">大厅</label>
+								 <select id="thallid" name="thallid">
+								 #foreach($hall in ${hallList})
+								 <option value=$!{hall.hid}>$!{hall.hhall}</option>
+								 #end
+								 </select>
+							</div>
+							<div class="form-group">
+								 <label for="tdate">日期</label>
+								 <input id="datepicker" type="text" name="tdate" readonly="true"/>
+							</div>
+							<div class="form-group">
+								 <label for="ttime">时间</label>
+								  <select id="ttime" name="ttime">
+                                    <option value="10:00">10:00</option>
+                                    <option value="14:00">14:00</option>
+                                    <option value="20:00">20:00</option>
+                                  </select>
+							</div>
+							 <button type="submit" class="btn btn-default">Submit</button>
+						</form>
+					</div>
+				</div>
+			</div>
+	</body>
+	<script>
+	$(function(){
+		$( "#datepicker" ).datepicker({
+            // changeMonth: true,
+            // changeYear: true,
+            dateFormat: "yy-mm-dd",
+			minDate:new Date()
+        });
+	});
+    </script>
+</html>

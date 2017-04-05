@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+##PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    #parse("head-contents.vm")
+
+## for cdn
+##    <link rel="stylesheet" type="text/css" href="http://vjs.zencdn.net/c/video-js.css"/>
+##    <script type="text/javascript" src="vjs.zencdn.net/c/video.js"></script>
+
+    <link rel="stylesheet" type="text/css" href="/assert/style/video-js.css"/>
+
+    <script type="text/javascript" src="/assert/script/videojs-ie8.min.js"></script>
+
+    <script type="text/javascript" src="/assert/script/video.dev.js"></script>
+    <script type="text/javascript" src="/assert/script/videojs-offset.min.js"></script>
+
+    <script>
+        videojs.options.flash.swf = "/assert/script/video-js.swf";
+    </script>
+	<style>
+		html{
+			overflow-x:hidden;
+		}
+		.endT input.newinput,.startT input.newinput{
+		position:relative;
+		width:100px;
+		top:-1px;
+		}
+		#pinglun {
+            width:100%;
+            padding-left:150px;
+            padding-top:25px;
+            background-color:white;
+            position:relative;
+            top:-34px;
+        }
+		.ping_block {
+            position:relative;
+            width:78%;
+            min-height:50px;
+            border:1px dotted gray;
+            margin:5px auto;
+            overflow-x:hidden;
+            padding-left:0px;
+            left:-149px;
+        }
+        .userpic {
+            border-radius:50%;
+            position:absolute;
+            left:10px;
+            top:10px;
+        }
+        .ping_content {
+            position:relative;
+            left:50px;
+            width:100%;
+            min-height:50px;
+            font-size:14px;
+            font-weight:bold;
+            font-family:"微软雅黑";
+            line-height:-10px;
+        }
+        .username {
+            position:relative;
+            top:55px;
+            left:10px;
+            font-weight:bold;
+            font-size:14px;
+        }
+		.movie_say_say{
+    		width:88%;
+    		margin-top:20px;
+    		vertical-align:middle;
+			height:200px;
+		}
+		#textcontent{
+			margin:0;
+			width:100%;
+			height:100px;
+			border:1px solid #b5b5b5;
+			overflow:hidden;
+		}
+		textarea{
+			color:#ccc;
+			padding:10px;
+		}
+		#button_green_fb{
+			width:117px;
+			height:38px;
+			line-height:38px;
+			margin:0 auto;
+			display:block;
+			font-size:20px !important;
+		}
+		.set_sub{
+			border:0px;
+			cursor:pointer;
+			width:auto !important;
+			width:100px;
+			min-width:100px;
+			height:35px;
+			line-height:35px;
+			text-align:center;
+			float:right;
+			background-color:#5DB6E0;
+			color:#fff;
+			font-size:16px !important;
+			text-decoration:none;
+		}
+	</style>
+</head>
+<body>
+    #parse("page-header.vm")
+
+<div class="wrap">
+    <!-- 播放器 -->
+    <div class="player-box">
+        <div class="player">
+            <video id="test_video_1" class="video-js vjs-default-skin vjs-big-play-centered" controls preload="auto"
+                   width="800" height="450"
+                   data-setup="{}">
+
+            ## mp4格式的视频
+                <source src="$film.fvideo" type='video/mp4'/>
+            ## 不支持H264编码的浏览器(比如Opera),使用webm格式.
+                <source src="http://video-js.zencoder.com/oceans-clip.webm" type='video/webm'/>
+            ##        <source src="http://video-js.zencoder.com/oceans-clip.ogv" type='video/ogg' />
+            ##        <track kind="captions" src="demo.captions.vtt" srclang="en" label="English"></track><!-- Tracks need an ending tag thanks to IE9 -->
+            ##        <track kind="subtitles" src="demo.captions.vtt" srclang="en" label="English"></track><!-- Tracks need an ending tag thanks to IE9 -->
+                <p class="vjs-no-js">请使用支持javascript的浏览器!!!</p>
+            </video>
+        </div>
+		<!--操作区-->
+        <div class="cut">
+            <div class="title">影片操作</div>
+            <div class="full-video">
+                <i class="add-cart"></i><a id="full-add-cart" class="long-grey-button">购票</a>
+            </div>
+            <div class="full-video">
+                <i class="add-collect"></i><a id="full-add-collect" class="long-grey-button">加入收藏夹</a>
+            </div>
+        </div>
+    </div>
+    <!--操作区结束-->
+    <!-- 播放器结束 -->
+    <!-- 素材详情-在线粗剪 -->
+    <div class="detail-box">
+        <div class="detail-cut">
+            <div class="detail">
+                <div class="title">$!{film.ffilmname}</div>
+                <div class="description"><label>简 介：</label>
+                    <p>$!{film.fintro}</p>
+                </div>
+            </div>
+        </div>
+		<div class="cut-right">
+            <div class="cut-right-source">
+				<label>导演：</label><span>$!{film.fdiretor}</span>
+            </div>
+            <div class="cut-right-use">
+				<label>主演：</label><span>$!{film.fplay}</span>
+            </div>
+            <div class="cut-right-time">
+				<label>类型：</label>
+				<span>
+					#foreach($sort in $sortList)
+						#if($!{film.fsortid}==$!{sort.sid})
+							$!{sort.ssort}
+						#end
+					#end
+				</span>
+            </div>
+            <div class="cut-right-format">
+				<label>区域：</label>
+				<span>
+					#foreach($area in $areaList)
+						#if($!{film.faid}==$!{area.aid})
+							$!{area.azone}
+						#end
+					#end
+				</span>
+            </div>
+			<div class="cut-right-source">
+				<label>语言：</label><span>$!{film.flanguage}</span>
+            </div>
+			<div class="cut-right-source">
+				<label>时长：</label><span>$!{film.flong}分</span>
+            </div>
+			<div class="cut-right-source">
+				<label>价格：</label><span>$!{film.fprice}元</span>
+            </div>
+    </div>
+    </div>
+</div>
+<div id="pinglun">
+            <h4>用户评论</h4>
+			#if(!$filmcommentList.isEmpty())
+				#foreach($filmcomment in $filmcommentList)
+                    <div class="ping_block">
+						#foreach($user in $userList)
+							#if($!{filmcomment.userid}==$!{user.userid})
+								<img src="$!{user.uphoto}" class="userpic" width="30"/>
+								<div class="username">$!{user.username}</div>
+							#end
+						#end
+                        <div class="ping_content">$!{filmcomment.comments}</div>
+                        <span style="color:#41A0CC;float:right;position:relative;right:10px;">发表于: &nbsp;&nbsp;&nbsp;$date.format("yyyy-M-dd",$!{filmcomment.ctime})</span>
+                    </div>
+				#end
+			#else
+				<div class="ping_block">
+				暂无评论!
+				</div>
+			#end
+</div>
+<div class="movie_say_say">
+	<span style="display:block;padding-left:150px;"><textarea id="textcontent" name="textcontent" 
+	onfocus="if(value=='请在此处填写评论！'){value=''}"  
+    onblur="if (value ==''){value='请在此处填写评论！'}">请在此处填写评论！</textarea></span>
+	<span style="display:block;">
+        <a href="javascript:void(0)" id="button_green_fb" class="set_sub" style="float:right;margin-top:10px;">发表</a>
+    </span>
+</div>
+</div>
+<!--jquery右下角pop弹窗start -->
+<div id="pop" style="display:none;">
+	<script type="text/javascript" src="/assert/script/yanue.pop.js"></script>
+	<style type="text/css">
+	#pop{background:#fff;width:260px;border:1px solid #e0e0e0;font-size:12px;position: fixed;right:10px;bottom:10px;}
+	#popHead{line-height:32px;background:#f6f0f3;border-bottom:1px solid #e0e0e0;position:relative;font-size:12px;padding:0 0 0 10px;}
+	#popHead h2{font-size:14px;color:#666;line-height:32px;height:32px;}
+	#popHead #popClose{position:absolute;right:10px;top:1px;}
+	#popHead a#popClose:hover{color:#f00;cursor:pointer;}
+	#popContent{padding:5px 10px;}
+	#popTitle a{line-height:24px;font-size:14px;font-family:'微软雅黑';color:#333;font-weight:bold;text-decoration:none;}
+	#popTitle a:hover{color:#f60;}
+	#popIntro{text-indent:24px;line-height:160%;margin:5px 0;color:#666;}
+	#popMore{text-align:right;border-top:1px dotted #ccc;line-height:24px;margin:8px 0 0 0;}
+	#popMore a{color:#f60;}
+	#popMore a:hover{color:#f00;}
+	</style>
+	<div id="popHead">
+	<a id="popClose" title="关闭">关闭</a>
+	<h2>温馨提示</h2>
+	</div>
+	<div id="popContent">
+	<dl>
+		<dt id="popTitle"><a href="#" target="_blank">这里是参数</a></dt>
+		<dd id="popIntro">这里是内容简介</dd>
+	</dl>
+	<p id="popMore"><a href="/cart/" target="_blank">查看 »</a></p>
+	</div>
+</div>
+<!--右下角pop弹窗 end-->
+<script charset="utf-8">
+    var isShowDialog = false;
+	var cartClips='';
+    errorInput = null;
+    redirectUrl = '';
+    function dialogCallback(code) {
+        isShowDialog = false;
+        if (redirectUrl != '') {
+            window.location.href = redirectUrl;
+            return;
+        }
+        if (errorInput != null && errorInput != 'undefined') {
+            errorInput.focus();
+        }
+    }
+    $(document).ready(function () {
+		$("#button_green_fb").click(function(){
+			console.info($('#textcontent').val());
+			if('请在此处填写评论！'==$('#textcontent').val()){
+				tpsAlert("请输入评论！");
+			}else{
+				var param={"comments":$('#textcontent').val(),"cfid":$!{film.fid}};
+				jQuery.ajax({
+					url:'/filmcomment/fb',
+					type:"POST",
+					data:JSON.stringify(param),
+					contentType : 'application/json',
+					dataType:"json",
+					success:function(r){
+						if(r.code==200){
+							tpsAlert("发表成功！", function(){window.location=window.location;});
+						}else {
+                                if (r.message == "login") {
+                                    window.location = "/login";
+                                }
+						}
+					}
+				});
+			}
+		});
+    });
+    element = videojs('test_video_1');
+</script>
+    #parse("page-footer.vm")
+</body>
+</html>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/mvc
+                        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+                        http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context.xsd
+                        http://www.springframework.org/schema/util
+                        http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+    <util:properties id="environment"
+        location="classpath:config.properties">
+    </util:properties>
+
+    <mvc:annotation-driven>
+        <!-- 消息转换器 -->
+        <mvc:message-converters
+            register-defaults="true">
+            <bean
+                class="org.springframework.http.converter.StringHttpMessageConverter">
+                <property name="supportedMediaTypes" value="text/html;charset=UTF-8" />
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+	<mvc:default-servlet-handler/>
+    <context:component-scan base-package="com.ln.film" />
+    <context:annotation-config />
+
+    <!-- 静态资源访问 -->
+    <mvc:resources mapping="/resources/**" location="/WEB-INF/resources/" />
+
+    <!--表示层 -->
+    <!--<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"> -->
+    <!--<property name="prefix" value="/WEB-INF/views/"/> -->
+    <!--<property name="suffix" value=".jsp"/> -->
+    <!--</bean> -->
+
+    <bean
+        class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+        <property name="suffix" value=".vm" />
+        <property name="contentType" value="text/html;charset=utf-8" />
+        <property name="toolboxConfigLocation" value="/WEB-INF/toolbox.xml" />
+    </bean>
+
+    <bean
+        class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+        <property name="resourceLoaderPath" value="/WEB-INF/velocity" />
+        <property name="configLocation" value="classpath:velocity.properties" />
+        <!--<property name="velocityProperties"> -->
+        <!--<props> -->
+        <!--<prop key="input.encoding">utf-8</prop> -->
+        <!--<prop key="output.encoding">utf-8</prop> -->
+        <!--<prop key="velocimacro.library">macro.vm</prop> -->
+        <!--<prop key="velocimacro.library.autoreload">true</prop> -->
+        <!--</props> -->
+        <!--</property> -->
+    </bean>
+
+    <!--权限控制的拦截器 -->
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**" />
+            <mvc:exclude-mapping path="/assert/**" />
+            <bean class="com.ln.film.interceptor.AuthenticationInterceptor" />
+                    </mvc:interceptor>
+    </mvc:interceptors>
+<!--     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping"> -->
+<!--     <property name="interceptors"> -->
+<!--     <list> -->
+<!--     //extends Interceptor -->
+<!--     <bean></bean> -->
+<!--     </list> -->
+<!--     </property> -->
+<!--     </bean> -->
+
+    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+        <property name="basename" value="classpath:i18n/messages"/>
+        <property name="cacheSeconds" value="10"/>
+        <property name="useCodeAsDefaultMessage" value="true"/>
+        <property name="fallbackToSystemLocale" value="true"/>
+    </bean>
+
+    <bean
+        class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+        <property name="messageConverters">
+            <list>
+                <bean
+                    class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+                    <property name="supportedMediaTypes">
+                        <list>
+                            <value>text/html;charset=UTF-8</value>
+                            <value>application/json;charset=UTF-8
+                            </value>
+                            <value>application/x-www-form-urlencoded
+                            </value>
+                        </list>
+                    </property>
+                </bean>
+            </list>
+        </property>
+    </bean>
+
+    <!-- Cookie工具类 -->
+    <bean name="cookieUtils" class="com.ln.film.utils.CookieUtils">
+        <constructor-arg index="0">
+            <value>tps_</value>
+        </constructor-arg>
+    </bean>
+    <!-- Email工具类 -->
+    <bean name="emailUtils" class="com.ln.film.utils.EmailUtils">
+    </bean>
+
+    <!-- quartz configuration -->
+<!--     <import resource="spring-develop-quartz.xml" /> -->
+</beans>

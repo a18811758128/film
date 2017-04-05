@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html ng-app="app">
+  <head>
+  #parse("usermanage/usermanage-head.vm")
+  </head>
+	<body>
+		 #parse("usermanage/usermanage-body.vm")
+			<div class="container">
+				<div class="row clearfix">
+					<div class="col-md-12 column">
+						<form role="form" action="/usermanage/updateRole/${userUpdate.userid}" method="post">
+							<div class="form-group">
+								 <label for="userid">用户ID</label>
+									<label id="userid" name="userid"> ${userUpdate.userid}</label>
+							</div>
+							<div class="form-group">
+								 <label for="username">用户名</label>
+								 <label id="username"> ${userUpdate.username}</label>
+							</div>
+							<div class="form-group">
+								 <label for="role">权限</label>
+								 <select id="roleid" name="roleid">
+								 #foreach($rolea in ${roleList})
+								 <option value=$!{rolea.roleid}>$!{rolea.displayName}</option>
+								 #end
+								 </select>
+							</div>
+							 <button type="submit" class="btn btn-default">Submit</button>
+						</form>
+					</div>
+				</div>
+			</div>
+	</body>
+</html>

@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.ln.film.dao.OrdersMapper" >
+  <resultMap id="BaseResultMap" type="com.ln.film.model.Orders" >
+    <id column="Oid" property="oid" jdbcType="INTEGER" />
+    <result column="OUid" property="ouid" jdbcType="INTEGER" />
+    <result column="Odate" property="odate" jdbcType="TIMESTAMP" />
+    <result column="OState" property="ostate" jdbcType="VARCHAR" />
+    <result column="OTid" property="otid" jdbcType="INTEGER" />
+    <result column="OPrice" property="oprice" jdbcType="DOUBLE" />
+    <result column="seat_count" property="seatCount" jdbcType="INTEGER" />
+    <result column="ticket_code" property="ticketCode" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    Oid, OUid, Odate, OState, OTid, OPrice, seat_count, ticket_code
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.ln.film.model.OrdersExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from orders
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from orders
+    where Oid = #{oid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from orders
+    where Oid = #{oid,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.ln.film.model.OrdersExample" >
+    delete from orders
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.ln.film.model.Orders" >
+    insert into orders (Oid, OUid, Odate, 
+      OState, OTid, OPrice, 
+      seat_count, ticket_code)
+    values (#{oid,jdbcType=INTEGER}, #{ouid,jdbcType=INTEGER}, #{odate,jdbcType=TIMESTAMP}, 
+      #{ostate,jdbcType=VARCHAR}, #{otid,jdbcType=INTEGER}, #{oprice,jdbcType=DOUBLE}, 
+      #{seatCount,jdbcType=INTEGER}, #{ticketCode,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.ln.film.model.Orders" >
+    insert into orders
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="oid != null" >
+        Oid,
+      </if>
+      <if test="ouid != null" >
+        OUid,
+      </if>
+      <if test="odate != null" >
+        Odate,
+      </if>
+      <if test="ostate != null" >
+        OState,
+      </if>
+      <if test="otid != null" >
+        OTid,
+      </if>
+      <if test="oprice != null" >
+        OPrice,
+      </if>
+      <if test="seatCount != null" >
+        seat_count,
+      </if>
+      <if test="ticketCode != null" >
+        ticket_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="oid != null" >
+        #{oid,jdbcType=INTEGER},
+      </if>
+      <if test="ouid != null" >
+        #{ouid,jdbcType=INTEGER},
+      </if>
+      <if test="odate != null" >
+        #{odate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ostate != null" >
+        #{ostate,jdbcType=VARCHAR},
+      </if>
+      <if test="otid != null" >
+        #{otid,jdbcType=INTEGER},
+      </if>
+      <if test="oprice != null" >
+        #{oprice,jdbcType=DOUBLE},
+      </if>
+      <if test="seatCount != null" >
+        #{seatCount,jdbcType=INTEGER},
+      </if>
+      <if test="ticketCode != null" >
+        #{ticketCode,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.ln.film.model.OrdersExample" resultType="java.lang.Integer" >
+    select count(*) from orders
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update orders
+    <set >
+      <if test="record.oid != null" >
+        Oid = #{record.oid,jdbcType=INTEGER},
+      </if>
+      <if test="record.ouid != null" >
+        OUid = #{record.ouid,jdbcType=INTEGER},
+      </if>
+      <if test="record.odate != null" >
+        Odate = #{record.odate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.ostate != null" >
+        OState = #{record.ostate,jdbcType=VARCHAR},
+      </if>
+      <if test="record.otid != null" >
+        OTid = #{record.otid,jdbcType=INTEGER},
+      </if>
+      <if test="record.oprice != null" >
+        OPrice = #{record.oprice,jdbcType=DOUBLE},
+      </if>
+      <if test="record.seatCount != null" >
+        seat_count = #{record.seatCount,jdbcType=INTEGER},
+      </if>
+      <if test="record.ticketCode != null" >
+        ticket_code = #{record.ticketCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update orders
+    set Oid = #{record.oid,jdbcType=INTEGER},
+      OUid = #{record.ouid,jdbcType=INTEGER},
+      Odate = #{record.odate,jdbcType=TIMESTAMP},
+      OState = #{record.ostate,jdbcType=VARCHAR},
+      OTid = #{record.otid,jdbcType=INTEGER},
+      OPrice = #{record.oprice,jdbcType=DOUBLE},
+      seat_count = #{record.seatCount,jdbcType=INTEGER},
+      ticket_code = #{record.ticketCode,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.ln.film.model.Orders" >
+    update orders
+    <set >
+      <if test="ouid != null" >
+        OUid = #{ouid,jdbcType=INTEGER},
+      </if>
+      <if test="odate != null" >
+        Odate = #{odate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="ostate != null" >
+        OState = #{ostate,jdbcType=VARCHAR},
+      </if>
+      <if test="otid != null" >
+        OTid = #{otid,jdbcType=INTEGER},
+      </if>
+      <if test="oprice != null" >
+        OPrice = #{oprice,jdbcType=DOUBLE},
+      </if>
+      <if test="seatCount != null" >
+        seat_count = #{seatCount,jdbcType=INTEGER},
+      </if>
+      <if test="ticketCode != null" >
+        ticket_code = #{ticketCode,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where Oid = #{oid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.ln.film.model.Orders" >
+    update orders
+    set OUid = #{ouid,jdbcType=INTEGER},
+      Odate = #{odate,jdbcType=TIMESTAMP},
+      OState = #{ostate,jdbcType=VARCHAR},
+      OTid = #{otid,jdbcType=INTEGER},
+      OPrice = #{oprice,jdbcType=DOUBLE},
+      seat_count = #{seatCount,jdbcType=INTEGER},
+      ticket_code = #{ticketCode,jdbcType=VARCHAR}
+    where Oid = #{oid,jdbcType=INTEGER}
+  </update>
+</mapper>

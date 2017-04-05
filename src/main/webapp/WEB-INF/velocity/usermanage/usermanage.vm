@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html ng-app="app">
+  <head>
+  #parse("usermanage/usermanage-head.vm")
+  </head>
+	<body>
+	<div class="container">
+		 #parse("usermanage/usermanage-body.vm")
+	<div class="row clearfix">
+		<div class="col-md-12 column">
+			<h1>欢迎使用！</h1>
+		</div>
+	</div>
+</div>
+	</body>
+</html>

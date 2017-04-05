@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+##PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+    #parse("head-contents.vm")
+    <style>
+    .success-div {
+        background-color: #DFDDDD;
+        color: #7e7e7e;
+        border: 1px solid #BEBEBE;
+        border-radius: 5px;
+        height: 55px;
+        line-height: 55px;
+        width: 400px;
+        height: 150px;
+        font-size: 15px;
+        text-align: center;
+        outline: none;
+        cursor: pointer;
+        margin-left: 360px;
+        margin-bottom: 50px;
+    }
+    #time-left {
+        color: blue;
+    }
+    </style>
+</head>
+<body>
+    #parse("page-header.vm")
+    <div class="success-div">退出成功。将在<span id="time-left">5</span>秒后跳转到首页。或者您可以点击<a href='#springUrl("/")'>这里</a>立即跳转。</div>
+<script>
+    $().ready(function() {
+        setTimeout("countDown()",1000);
+    });
+    function countDown() {
+        var timeLeft = $("#time-left").html();
+        timeLeft -= 1;
+        $("#time-left").html(timeLeft);
+        if (timeLeft <= 0) {
+            window.location.href='#springUrl("/")';
+        } else {
+            setTimeout("countDown()",1000);
+        }
+    }
+</script>
+
+    #parse("page-footer.vm")
+
+</body>
+</html>
