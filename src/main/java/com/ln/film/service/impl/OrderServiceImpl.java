@@ -12,6 +12,8 @@ import com.ln.film.model.OrderSeat;
 import com.ln.film.model.OrderSeatExample;
 import com.ln.film.model.Orders;
 import com.ln.film.model.OrdersExample;
+import com.ln.film.model.Seat;
+import com.ln.film.model.SeatExample;
 import com.ln.film.service.OrderService;
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -42,6 +44,25 @@ public class OrderServiceImpl implements OrderService {
 			orderSeat.setSeat(seatMapper.selectByPrimaryKey(orderSeat.getSeid()));
 		}
 		return orderSeatList;
+	}
+
+	@Override
+	public List<Seat> getSeatListByHid(Integer thallid) {
+		SeatExample example=new SeatExample();
+		example.createCriteria().andSehallidEqualTo(thallid);
+		return seatMapper.selectByExample(example);
+	}
+
+	@Override
+	public boolean getSelectSeatBySeid(Integer seid) {
+		OrderSeatExample example=new OrderSeatExample();
+		OrderSeatExample.Criteria criteria=example.createCriteria();
+		criteria.andSeidEqualTo(seid);
+		criteria.andStatusEqualTo("0");
+		if(orderSeatMapper.countByExample(example)>0){
+			return true;
+		}
+		return false;
 	}
 	
 }

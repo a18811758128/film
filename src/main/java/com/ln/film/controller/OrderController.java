@@ -18,6 +18,7 @@ import com.ln.film.annotation.Login;
 import com.ln.film.model.Film;
 import com.ln.film.model.Hall;
 import com.ln.film.model.Orders;
+import com.ln.film.model.Seat;
 import com.ln.film.model.Timetable;
 import com.ln.film.model.Users;
 import com.ln.film.model.vo.OrderAndSeat;
@@ -109,30 +110,40 @@ public class OrderController extends AbstractController{
 			return "redirect:/login";
 		}
 		logger.info("选座");
+		Timetable timetable=null;
+		Film film =null;
 		if(tid!=null){
-			Timetable timetable = timetableService.getTimetableById(tid);
-			Film film = filmsService.getFilmById(timetable.getTfid());
-			model.put("timetable", timetable);
-			model.put("film", film);
+			timetable = timetableService.getTimetableById(tid);
+			film= filmsService.getFilmById(timetable.getTfid());
+			
 		}else{
 			SimpleDateFormat sdf1=new SimpleDateFormat("yyyy-MM-dd");
 			SimpleDateFormat sdf2=new SimpleDateFormat("HH:mm");
-			Timetable timetable=new Timetable();
 			try {
+				timetable=new Timetable();
 				timetable.setTfid(fid);
 				timetable.setThallid(thallid);
 				timetable.setTdate(sdf1.parse(tdate));
 				timetable.setTtime(sdf2.parse(ttime));
 				timetable=timetableService.getTimetable(timetable);
-				Film film = filmsService.getFilmById(fid);
-				model.put("timetable", timetable);
-				model.put("film", film);
+				film = filmsService.getFilmById(fid);
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
 		}
 		List<Hall> hallList = filmsService.getHallList();
+		List<Seat> seats=orderService.getSeatListByHid(timetable.getThallid());
+		List<Seat> seatList=new ArrayList<>();
+		for (Seat seat : seats) {
+			boolean flag=orderService.getSelectSeatBySeid(seat.getSeid());
+			if(flag){
+				seatList.add(seat);
+			}
+		}
+		model.put("seatList", seatList);
 		model.put("hallList", hallList);
+		model.put("timetable", timetable);
+		model.put("film", film);
 		return "selectSeat";
 		
 	}
