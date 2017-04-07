@@ -16,4 +16,14 @@ public interface OrderService {
 
 	boolean getSelectSeatBySeid(Integer seid);
 
+	Seat getSeatBySeat(Seat seat);
+
+	int addSeat(Seat seat);
+
+	Seat getSeatById(Integer seid);
+
+	int addOrder(Orders order);
+
+	int addOrderSeat(OrderSeat os);
+
 }

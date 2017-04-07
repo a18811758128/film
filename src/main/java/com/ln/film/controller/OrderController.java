@@ -3,6 +3,7 @@ package com.ln.film.controller;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpSession;
@@ -10,13 +11,17 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.ln.film.annotation.Login;
+import com.ln.film.model.AjaxResult;
 import com.ln.film.model.Film;
 import com.ln.film.model.Hall;
+import com.ln.film.model.OrderSeat;
 import com.ln.film.model.Orders;
 import com.ln.film.model.Seat;
 import com.ln.film.model.Timetable;
@@ -145,6 +150,73 @@ public class OrderController extends AbstractController{
 		model.put("timetable", timetable);
 		model.put("film", film);
 		return "selectSeat";
-		
+	}
+	
+	@RequestMapping(value="add")
+	@ResponseBody
+	public AjaxResult AddOrder(ModelMap model,HttpSession session,@RequestBody Seat[] seats){
+		if (session == null || null == session.getAttribute("hasLogin")
+                || session.getAttribute("user") == null) {
+            logger.info("没有登录, 重定向至登陆页");
+            return new AjaxResult(AjaxResult.FAIL, "login");
+        }
+        AjaxResult ajaxResult = new AjaxResult(AjaxResult.FAIL);
+        List<Seat> seatList=new ArrayList<>();
+        for (Seat seat : seats) {
+			if(orderService.getSeatBySeat(seat)==null){
+				orderService.addSeat(seat);
+			}
+			seatList.add(orderService.getSeatBySeat(seat));
+		}
+        ajaxResult.setCode(AjaxResult.SUCCESS);
+        ajaxResult.setData(seatList);
+		return ajaxResult;
+	}
+	
+	@RequestMapping(value="pay",method=RequestMethod.GET)
+	public String pay(HttpSession session, ModelMap model,Integer tid,Integer[] seids){
+		if (session == null || null == session.getAttribute("hasLogin") || session.getAttribute("user") == null) {
+			logger.info("没有登录, 重定向至登陆页");
+			return "redirect:/login";
+		}
+		Users user = (Users) session.getAttribute("user");
+        logger.info("支付");
+        Timetable timetable=timetableService.getTimetableById(tid);
+        Film film=filmsService.getFilmById(timetable.getTfid());
+        Orders order=new Orders();
+        order.setOdate(new Date());
+        order.setOprice(film.getFprice()*seids.length);
+        order.setSeatCount(seids.length);
+        order.setOtid(tid);
+        order.setOuid(user.getUserid());
+        order.setTicketCode("未支付");
+        orderService.addOrder(order);
+        List<OrderSeat> orderSeatList=new ArrayList<>();
+        for (Integer seid : seids) {
+			Seat seat=orderService.getSeatById(seid);
+			OrderSeat os=new OrderSeat();
+			os.setSeat(seat);
+			os.setOid(order.getOid());
+			os.setSeid(seid);
+			os.setStatus("1");
+			orderService.addOrderSeat(os);
+			orderSeatList.add(os);
+		}
+        List<OrderAndSeat> oasList=new ArrayList<>();
+		OrderAndSeat oas=new OrderAndSeat();
+		oas.setOid(order.getOid());
+		oas.setOdate(order.getOdate());
+		oas.setTicketCode(order.getTicketCode());
+		oas.setOprice(film.getFprice()*orderSeatList.size());
+		oas.setSeatCount(orderSeatList.size());
+		oas.setUser(user);
+		oas.setTimetable(timetable);
+		oas.setOrderSeatList(orderSeatList);
+		oasList.add(oas);
+		List<Hall> hallList = filmsService.getHallList();
+		model.put("film", film);
+		model.put("hallList", hallList);
+		model.put("oasList",oasList);
+		return "orders-pay";
 	}
 }

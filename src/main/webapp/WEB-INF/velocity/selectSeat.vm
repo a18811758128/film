@@ -115,6 +115,36 @@
                 });
                 return total;
             }
+			var ary = [];
+			$(".booking_area .btn").click(function(){
+				$("#seats_chose").find("li").each(function(){
+					console.info($(this).html());
+					var data=new Object();
+					var r=$(this).html().indexOf("排");
+					var c=$(this).html().indexOf("座");
+					data.serow=$(this).html().substring(0,r); 
+					data.senum=$(this).html().substring(r+1,c); 
+					data.sehallid=$timetable.thallid;
+					console.info(data);
+					ary.push(data);
+				});
+				console.info(JSON.stringify(ary));
+				jQuery.ajax({
+					type:'POST',
+					url:"/order/add",
+					data:JSON.stringify(ary),
+					contentType:"application/json",
+					success:function(data){
+						var json=eval(data);
+						var seids=[];
+						for(var i=0;i<json.data.length;i++){
+    						console.info(json.data[i].seid);
+							seids.push(json.data[i].seid);
+						}
+						window.location="/order/pay?tid=$!{timetable.tid}&seids="+seids;
+					}
+				});
+			});
         </script>
 </body>
 </html>

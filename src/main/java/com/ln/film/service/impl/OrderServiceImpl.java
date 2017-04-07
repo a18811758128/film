@@ -64,5 +64,40 @@ public class OrderServiceImpl implements OrderService {
 		}
 		return false;
 	}
+
+	@Override
+	public Seat getSeatBySeat(Seat seat) {
+		SeatExample example=new SeatExample();
+		SeatExample.Criteria criteria=example.createCriteria();
+		criteria.andSehallidEqualTo(seat.getSehallid());
+		criteria.andSerowEqualTo(seat.getSerow());
+		criteria.andSenumEqualTo(seat.getSenum());
+		List<Seat> selectByExample = seatMapper.selectByExample(example);
+		if(selectByExample!=null&&!selectByExample.isEmpty()){
+			return selectByExample.get(0);
+		}
+		return null;
+	}
+
+	@Override
+	public int addSeat(Seat seat) {
+		return seatMapper.insertSelective(seat);
+	}
+
+	@Override
+	public Seat getSeatById(Integer seid) {
+		return seatMapper.selectByPrimaryKey(seid);
+	}
+
+	@Override
+	public int addOrder(Orders order) {
+		return ordersMapper.insertSelective(order);
+	}
+
+	@Override
+	public int addOrderSeat(OrderSeat os) {
+		// TODO Auto-generated method stub
+		return orderSeatMapper.insertSelective(os);
+	}
 	
 }

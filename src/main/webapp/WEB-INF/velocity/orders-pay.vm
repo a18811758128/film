@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    #parse("head-contents.vm")
+    <link rel="stylesheet" type="text/css" href="/assert/style/jPages.css" />
+    <link rel="stylesheet" type="text/css" href="/assert/style/tcal.css" />
+    <link rel="stylesheet" type="text/css" href="/assert/style/jquery.page.css" />
+    <script type="text/javascript" src="/assert/script/jPages.js"></script>
+    <script type="text/javascript" src="/assert/script/tcal.js"></script>
+    <script type="text/javascript" src="/assert/script/jquery.page.js"></script>
+</head>
+<body>
+    #parse("page-header.vm")
+<div class="content-bcf">
+    <div class="order-center">
+        <div class="cart-icon"></div>
+        <div class="wrap">
+            <div class="fa-data">
+            </div>
+        </div>
+    </div>
+<!-- 订单头部结束 -->
+<!-- 订单开始 -->
+<div class="banlance-center">
+    <div class="banlance-item">
+        <ul id="orderList">
+            #foreach($oas in $oasList)
+                <li>
+                    <div class="item-info clear" style="border-bottom:1px solid #F3B850;">
+                        <div class="video-from">订单编号：$!{oas.oid}</div>
+                        <div class="video-from">$date.format("yyyy年M月dd日 HH:mm:ss", $!{oas.odate})</div>
+                        <div class="video-from">座位数量：$!{oas.seatCount}</div>
+                        <div class="video-from">取票码：$!{oas.ticketCode}</div>
+						<div class="add-to-favorite"><label>¥$!{oas.oprice}</label></div>
+                    </div>
+					<div class="item-info clear" style="border-top:0px;">
+						<div class="video-from" style="width:300px;">电影名：$film.ffilmname</div>
+						<div class="video-from">厅室：#foreach($hall in $hallList)#if($hall.hid==$!{oas.timetable.thallid})$hall.hhall#end #end</div>
+						<div class="video-from">日期：$date.format("yyyy年M月dd日", $!{oas.timetable.tdate})</div>
+						<div class="video-from">时间：$date.format("HH:mm:ss", $!{oas.timetable.ttime})</div>
+                    </div>
+                </li>
+				#foreach($orderSeat in $oas.orderSeatList)
+					<li>
+                        <div class="order-list-l">
+                            <div class="video-from">座位编号:$!{orderSeat.seat.seid}</div>
+                            <div class="video-from">座位排数:$!{orderSeat.seat.serow}</div>
+                            <div class="video-from">座位号码:$!{orderSeat.seat.senum}</div>
+                        </div>
+                    </li>
+                    #end
+            #end
+        </ul>
+		<!-- 支付 -->
+        <div class="orders-pay wrap">
+            <div class="pay-way">
+                <i class="banks yinlian"></i>
+            </div>
+            <ul class="bank-list clear">
+                <li class="current"><i class="b-dot"></i><span class="banks ICBC"></span></li>
+                <li><i class="b-dot"></i><span class="banks CCB"></span></li>
+                <li><i class="b-dot"></i><span class="banks BOB"></span></li>
+                <li><i class="b-dot"></i><span class="banks CMB"></span></li>
+                <li><i class="b-dot"></i><span class="banks PSBC"></span></li>
+                <li><i class="b-dot"></i><span class="banks BOC"></span></li>
+                <li><i class="b-dot"></i><span class="banks BCM"></span></li>
+                <li><i class="b-dot"></i><span class="banks ABC"></span></li>
+                <li><i class="b-dot"></i><span class="banks HXB"></span></li>
+                <li><i class="b-dot"></i><span class="banks ali"></span></li>
+            </ul>
+        </div>
+        <div class="pay-btn"><a id="pay_confirm" href="javascript:void(0)">确认支付</a></div>
+        <!-- 支付 结束-->
+    </div>
+    </div>
+</div>
+<script>
+$(document).ready(function () {
+	$('#pay_confirm').click(function () {
+        jQuery.ajax({
+                    url: '',
+                    type: 'POST',
+                    data: json,
+                    contentType: 'application/json',
+                    dataType: 'json',
+                    success: function (r) {
+                        if (r.code == 200) {
+                            tpsAlert("支付成功!",function(){
+                            window.location="";
+							});
+                        } else {
+                            if (r.message == "login") {
+                                window.location.href = "/login";
+                            } else {
+                                tpsAlert("支付失败!",function(){window.location= "";});
+                                
+                            }
+                        }
+                    }
+         });
+    });
+});
+</script>
+<!-- 订单 结束 -->
+</div>
+
+    #parse("page-footer.vm")
+
+</body>
+</html>

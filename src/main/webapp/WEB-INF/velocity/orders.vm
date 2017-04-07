@@ -42,16 +42,14 @@
 							<div class="video-from">日期：$date.format("yyyy年M月dd日", $!{oas.timetable.tdate})</div>
 							<div class="video-from">时间：$date.format("HH:mm:ss", $!{oas.timetable.ttime})</div>
                         </div>
-                    </li>
 					#foreach($orderSeat in $oas.orderSeatList)
-						<li>
                             <div class="order-list-l">
                                 <div class="video-from">座位编号:$!{orderSeat.seat.seid}</div>
                                 <div class="video-from">座位排数:$!{orderSeat.seat.serow}</div>
                                 <div class="video-from">座位号码:$!{orderSeat.seat.senum}</div>
                             </div>
-                        </li>
                         #end
+                    </li>
                 #end
             </ul>
             <div class="holder"></div>
