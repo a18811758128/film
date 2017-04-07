@@ -32,4 +32,8 @@ public interface OrderService {
 
 	int updateOrderSeat(OrderSeat orderSeat);
 
+	int deleteOrderById(Integer oid);
+
+	int deleteOrderSeatByOid(Integer oid);
+
 }

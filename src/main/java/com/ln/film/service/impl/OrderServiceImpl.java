@@ -115,5 +115,17 @@ public class OrderServiceImpl implements OrderService {
 	public int updateOrderSeat(OrderSeat orderSeat) {
 		return orderSeatMapper.updateByPrimaryKeySelective(orderSeat);
 	}
+
+	@Override
+	public int deleteOrderById(Integer oid) {
+		return ordersMapper.deleteByPrimaryKey(oid);
+	}
+
+	@Override
+	public int deleteOrderSeatByOid(Integer oid) {
+		OrderSeatExample example=new OrderSeatExample();
+		example.createCriteria().andOidEqualTo(oid);
+		return orderSeatMapper.deleteByExample(example);
+	}
 	
 }

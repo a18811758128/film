@@ -29,6 +29,7 @@ import com.ln.film.model.Seat;
 import com.ln.film.model.Timetable;
 import com.ln.film.model.Users;
 import com.ln.film.model.vo.OrderAndSeat;
+import com.ln.film.service.EmailService;
 import com.ln.film.service.FilmsService;
 import com.ln.film.service.OrderService;
 import com.ln.film.service.TimetableService;
@@ -47,6 +48,9 @@ public class OrderController extends AbstractController{
 	
 	@Autowired
 	private FilmsService filmsService;
+	
+	@Autowired
+    private EmailService emailService;
 	
 	@RequestMapping(value="list",method=RequestMethod.GET)
 	public String showOrder(HttpSession session, ModelMap model){
@@ -260,5 +264,66 @@ public class OrderController extends AbstractController{
 			e.printStackTrace();
 			return new AjaxResult(AjaxResult.FAIL, e.getMessage());
 		}
+	}
+	
+	@RequestMapping(value="payorder",method=RequestMethod.GET)
+	public String payOrder(HttpSession session, ModelMap model,Integer oid){
+		if (session == null || null == session.getAttribute("hasLogin") || session.getAttribute("user") == null) {
+			logger.info("没有登录, 重定向至登陆页");
+			return "redirect:/login";
+		}
+		Users user = (Users) session.getAttribute("user");
+        logger.info("支付");
+        
+        Orders order=orderService.getOrderById(oid);
+        Timetable timetable=timetableService.getTimetableById(order.getOtid());
+        Film film=filmsService.getFilmById(timetable.getTfid());
+        List<OrderAndSeat> oasList=new ArrayList<>();
+		OrderAndSeat oas=new OrderAndSeat();
+		oas.setOid(order.getOid());
+		oas.setOdate(order.getOdate());
+		oas.setTicketCode(order.getTicketCode());
+		oas.setOprice(order.getOprice());
+		oas.setSeatCount(order.getSeatCount());
+		oas.setUser(user);
+		oas.setTimetable(timetable);
+		oas.setOrderSeatList(orderService.getOrderSeatListByOid(order.getOid()));
+		oasList.add(oas);
+		List<Hall> hallList = filmsService.getHallList();
+		model.put("film", film);
+		model.put("hallList", hallList);
+		model.put("oasList",oasList);
+		return "orders-pay";
+	}
+	
+	@RequestMapping(value="delete/{oid}")
+	public String deleteOrder(ModelMap model,HttpSession session,@PathVariable("oid") Integer oid){
+		if (session == null || null == session.getAttribute("hasLogin") || session.getAttribute("user") == null) {
+			logger.info("没有登录, 重定向至登陆页");
+			return "redirect:/login";
+		}
+		orderService.deleteOrderById(oid);
+		orderService.deleteOrderSeatByOid(oid);
+		return redirectTo("/order/list");
+	}
+	
+	@RequestMapping(value="return/{oid}")
+	public String returnOrder(ModelMap model,HttpSession session,@PathVariable("oid") Integer oid){
+		if (session == null || null == session.getAttribute("hasLogin") || session.getAttribute("user") == null) {
+			logger.info("没有登录, 重定向至登陆页");
+			return "redirect:/login";
+		}
+		Users user = (Users) session.getAttribute("user");
+		Orders order = orderService.getOrderById(oid);
+		List<OrderSeat> orderSeatList= orderService.getOrderSeatListByOid(oid);
+		for (OrderSeat orderSeat : orderSeatList) {
+			orderSeat.setStatus("1");
+			orderService.updateOrderSeat(orderSeat);
+		}
+		order.setTicketCode("已退票");
+		if(orderService.updateOrder(order)>0){
+			emailService.sendReturnEmail(user);
+		}
+		return redirectTo("/order/list");
 	}
 }

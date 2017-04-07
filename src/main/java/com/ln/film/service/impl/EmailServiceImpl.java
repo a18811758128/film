@@ -68,4 +68,12 @@ public class EmailServiceImpl implements EmailService {
 
 	    }
 
+	@Override
+	public void sendReturnEmail(Users user) {
+        String emailContent = "你的帐号 " + user.getUsername() + "已成功退票，稍后会将票款返还";
+        boolean result = false;
+        result = emailUtils.sendEmail("退票成功", emailContent, user.getUemail());
+        logger.info("send email result:" + result);
+	}
+
 }
