@@ -5,12 +5,14 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -30,6 +32,7 @@ import com.ln.film.model.vo.OrderAndSeat;
 import com.ln.film.service.FilmsService;
 import com.ln.film.service.OrderService;
 import com.ln.film.service.TimetableService;
+
 
 @Controller
 @RequestMapping(value="order")
@@ -218,5 +221,44 @@ public class OrderController extends AbstractController{
 		model.put("hallList", hallList);
 		model.put("oasList",oasList);
 		return "orders-pay";
+	}
+	
+	@RequestMapping(value = "/pay/{oid}", method = RequestMethod.POST)
+	@ResponseBody
+	public AjaxResult payOrder(HttpSession session,
+			@PathVariable("oid") Integer oid) {
+
+		if (session == null || null == session.getAttribute("hasLogin") || session.getAttribute("user") == null) {
+			logger.info("没有登录, 重定向至登陆页");
+			return new AjaxResult(AjaxResult.FAIL, "login");
+		}
+
+		try {
+			// 未链接支付, 直接认为支付成功
+
+			logger.info("支付订单 订单编号: " + oid);
+			logger.info("支付成功!!");
+			Orders order = orderService.getOrderById(oid);
+			if (order == null) {
+				return new AjaxResult(AjaxResult.FAIL, "找不到订单'" + oid + "'");
+			}
+			Random r1=new Random();
+			int c1 = r1.nextInt(899999)+100000;
+			int c2 = r1.nextInt(899999)+100000;
+			String ticketCode=c1+""+c2;
+			order.setTicketCode(ticketCode);
+			orderService.updateOrder(order);
+			List<OrderSeat> orderSeatList=orderService.getOrderSeatListByOid(oid);
+			if(orderSeatList!=null&&!orderSeatList.isEmpty()){
+				for (OrderSeat orderSeat : orderSeatList) {
+					orderSeat.setStatus("0");
+					orderService.updateOrderSeat(orderSeat);
+				}
+			}
+			return new AjaxResult(AjaxResult.SUCCESS);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return new AjaxResult(AjaxResult.FAIL, e.getMessage());
+		}
 	}
 }

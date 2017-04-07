@@ -26,4 +26,10 @@ public interface OrderService {
 
 	int addOrderSeat(OrderSeat os);
 
+	Orders getOrderById(Integer oid);
+
+	int updateOrder(Orders order);
+
+	int updateOrderSeat(OrderSeat orderSeat);
+
 }

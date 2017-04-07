@@ -31,6 +31,7 @@ public class OrderServiceImpl implements OrderService {
 		OrdersExample example=new OrdersExample();
 		OrdersExample.Criteria criteria=example.createCriteria();
 		criteria.andOuidEqualTo(userid);
+		example.setOrderByClause("odate DESC");
 		return ordersMapper.selectByExample(example);
 	}
 
@@ -98,6 +99,21 @@ public class OrderServiceImpl implements OrderService {
 	public int addOrderSeat(OrderSeat os) {
 		// TODO Auto-generated method stub
 		return orderSeatMapper.insertSelective(os);
+	}
+
+	@Override
+	public Orders getOrderById(Integer oid) {
+		return ordersMapper.selectByPrimaryKey(oid);
+	}
+
+	@Override
+	public int updateOrder(Orders order) {
+		return ordersMapper.updateByPrimaryKeySelective(order);
+	}
+
+	@Override
+	public int updateOrderSeat(OrderSeat orderSeat) {
+		return orderSeatMapper.updateByPrimaryKeySelective(orderSeat);
 	}
 	
 }

@@ -27,6 +27,7 @@
             #foreach($oas in $oasList)
                 <li>
                     <div class="item-info clear" style="border-bottom:1px solid #F3B850;">
+						<input type="hidden" id="oid" value="$!{oas.oid}"/>
                         <div class="video-from">订单编号：$!{oas.oid}</div>
                         <div class="video-from">$date.format("yyyy年M月dd日 HH:mm:ss", $!{oas.odate})</div>
                         <div class="video-from">座位数量：$!{oas.seatCount}</div>
@@ -76,23 +77,21 @@
 </div>
 <script>
 $(document).ready(function () {
+	console.info($("#oid").val());
 	$('#pay_confirm').click(function () {
         jQuery.ajax({
-                    url: '',
+                    url: '/order/pay/'+$("#oid").val(),
                     type: 'POST',
-                    data: json,
-                    contentType: 'application/json',
-                    dataType: 'json',
                     success: function (r) {
                         if (r.code == 200) {
                             tpsAlert("支付成功!",function(){
-                            window.location="";
+                            window.location="/order/list";
 							});
                         } else {
                             if (r.message == "login") {
                                 window.location.href = "/login";
                             } else {
-                                tpsAlert("支付失败!",function(){window.location= "";});
+                                tpsAlert("支付失败!",function(){window.location= "/";});
                                 
                             }
                         }
