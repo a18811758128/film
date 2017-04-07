@@ -24,4 +24,6 @@ public interface TimetableService {
 
 	Timetable getTimetable(Timetable timetable);
 
+	List<Timetable> getTimetableByFid(Integer fid);
+
 }

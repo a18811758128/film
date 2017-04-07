@@ -326,4 +326,36 @@ public class OrderController extends AbstractController{
 		}
 		return redirectTo("/order/list");
 	}
+	
+	@RequestMapping(value="buy/{fid}")
+	public String buyFilm(ModelMap map,HttpSession session,@PathVariable("fid")Integer fid){
+		if (session == null || null == session.getAttribute("hasLogin") || session.getAttribute("user") == null) {
+			logger.info("没有登录, 重定向至登陆页");
+			return "redirect:/login";
+		}
+		logger.info("根据电影选择场次");
+		Film film=filmsService.getFilmById(fid);
+		SimpleDateFormat sdf1=new SimpleDateFormat("yyyy-MM-dd");
+		SimpleDateFormat sdf2=new SimpleDateFormat("HH");
+		Date date=new Date();
+		List<Timetable> timetables=timetableService.getTimetableByFid(fid);
+		List<Timetable> timetableList=new ArrayList<>();
+		if(timetables!=null&&!timetables.isEmpty()){
+			for (Timetable timetable : timetables) {
+				if(date.before(timetable.getTdate())){
+					timetableList.add(timetable);
+				}
+				if(sdf1.format(date).equals(sdf1.format(timetable.getTdate()))){
+					if(Integer.parseInt(sdf2.format(date))<Integer.parseInt(sdf2.format(timetable.getTtime()))){
+						timetableList.add(timetable);
+					}
+				}
+			}
+			List<Hall> hallList = filmsService.getHallList();
+			map.put("hallList", hallList);
+			map.put("film", film);
+			map.put("timetableList", timetableList);
+		}
+		return "buyTheFilm";
+	}
 }

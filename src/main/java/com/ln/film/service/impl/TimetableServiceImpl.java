@@ -108,4 +108,11 @@ public class TimetableServiceImpl implements TimetableService {
 		return null;
 	}
 
+	@Override
+	public List<Timetable> getTimetableByFid(Integer fid) {
+		TimetableExample example=new TimetableExample();
+		example.createCriteria().andTfidEqualTo(fid);
+		return timetableMapper.selectByExample(example);
+	}
+
 }

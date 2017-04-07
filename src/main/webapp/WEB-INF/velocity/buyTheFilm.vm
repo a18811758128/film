@@ -45,6 +45,7 @@
 					</tr>
 				</thead>
 				<tbody id="filminfo">
+				#if(!!$timetableList&&!$timetableList.isEmpty())
 					#foreach($timetable in $timetableList)
 					<tr>
 						<td>
@@ -74,6 +75,9 @@
 						</td>
 					</tr>
 					#end
+				#else
+                       <h4>本影片暂无场次安排</h4>
+				#end
 				</tbody>
 				<tfoot>
 				</tfoot>

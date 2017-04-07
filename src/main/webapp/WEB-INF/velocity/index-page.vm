@@ -30,7 +30,7 @@
     					<div class="film_info">$film.ffilmname</div>
     					<div class="containers">
     						<a href="/preview/showfilm?fid=$film.fid" target="_blank"><img src="/assert/images/movie.png" class="detail_pic" title="查看影片详情"/></a>
-    						<a href="buymovies.aspx" target="_blank"><img src="/assert/images/Shops.png" class="buy_pic" title="购票"/></a>
+    						<a href="/order/buy/$film.fid" target="_blank"><img src="/assert/images/Shops.png" class="buy_pic" title="购票"/></a>
     					</div>
     				</div>
 					#end
