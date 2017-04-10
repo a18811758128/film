@@ -135,7 +135,7 @@
         <div class="cut">
             <div class="title">影片操作</div>
             <div class="full-video">
-                <i class="add-cart"></i><a id="full-add-cart" class="long-grey-button">购票</a>
+                <i class="add-cart"></i><a id="full-add-cart" class="long-grey-button" href="/order/buy/$film.fid">购票</a>
             </div>
             <div class="full-video">
                 <i class="add-collect"></i><a id="full-add-collect" class="long-grey-button">加入收藏夹</a>
