@@ -164,7 +164,7 @@ $(function () {
     							window.location='/order/buythefilm?tfid='+tfid+'&ttime='+ttime+'&tdate='+tdate;
     						}else {
                                     if (r.message == "login") {
-                                      tpsAlert("请先登录！", function(){window.location = "/login";});
+                                      tpsAlert("请先登录！", function(){window.location = "/login?returnurl="+r.returnurl;});
                                     }
                                     if (r.message == "tdate") {
                                         tpsAlert("此电影今日无场次，请选择其他影片！", function(){window.location=window.location;});

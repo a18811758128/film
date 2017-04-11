@@ -89,7 +89,7 @@ $(document).ready(function () {
 							});
                         } else {
                             if (r.message == "login") {
-                                window.location.href = "/login";
+                                window.location.href = "/login?returnurl="+r.returnurl;
                             } else {
                                 tpsAlert("支付失败!",function(){window.location= "/";});
                                 

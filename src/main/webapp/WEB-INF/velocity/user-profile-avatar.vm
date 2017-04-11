@@ -102,7 +102,7 @@
                     redirectUrl = "/settings/";
                     isShowDialog=tpsAlert("修改成功!",dialogCallback);
                 } else if (data.code==-2 && data.message=='login') {
-                    window.location.href="/login?returnurl=/material/upload";
+                    window.location.href="/login";
                 }
             },
             afterUploadAll:function(obj)

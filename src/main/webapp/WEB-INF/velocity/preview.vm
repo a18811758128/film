@@ -285,9 +285,7 @@
 						if(r.code==200){
 							tpsAlert("发表成功！", function(){window.location=window.location;});
 						}else {
-                                if (r.message == "login") {
-                                    window.location = "/login";
-                                }
+                            window.location = "/login?returnurl="+r.returnurl;
 						}
 					}
 				});
