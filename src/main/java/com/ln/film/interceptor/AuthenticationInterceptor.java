@@ -55,7 +55,7 @@ public class AuthenticationInterceptor extends HandlerInterceptorAdapter {
             HttpServletResponse response, Object handler) throws Exception {
         LOG.info("AuthenticationInterceptor: Pre-handle, request URI is:"
                 + request.getRequestURI());
-//        checkCookie(request, response);
+        checkCookie(request, response);
         if (handler instanceof HandlerMethod) {
             HandlerMethod hmethod = (HandlerMethod) handler;
             initAttribute(hmethod, request, response);

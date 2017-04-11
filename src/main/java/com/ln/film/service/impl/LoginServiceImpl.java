@@ -17,7 +17,11 @@ import com.ln.film.exception.authentication.BadCredentialException;
 import com.ln.film.model.Users;
 import com.ln.film.model.UsersExample;
 import com.ln.film.service.LoginService;
+import com.ln.film.utils.CipherHelper;
+import com.ln.film.utils.CookieUtils;
 import com.ln.film.utils.MyTools;
+import com.ln.film.utils.SharedConstants;
+
 
 
 /**
@@ -30,8 +34,8 @@ public class LoginServiceImpl implements LoginService {
     @Autowired
     private UsersMapper userMapper;
 
-//    @Autowired
-//    private CookieUtils cookieUtils;
+    @Autowired
+    private CookieUtils cookieUtils;
 
     @Override
     public Users login(String username, String password, String ip)
@@ -73,70 +77,52 @@ public class LoginServiceImpl implements LoginService {
         return user;
     }
 
-	@Override
-	public Users loginByCookie(String userCookie) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Users loginByCookie(String userCookie) {
+        logger.info("login by cookie, user cookie is:" + userCookie);
+        String[] userIdName = CipherHelper.decrypt(userCookie).split("-");
+        if (userIdName == null || userIdName.length < 2) {
+            logger.info("login by cookie fail, userIdName is:" + userIdName);
+            return null;
+        }
+        try {
+            String userIdStr = userIdName[0];
+            String userName = userIdName[1];
+            logger.info("login by cookie, user:" + userName + ", id:"
+                    + userIdStr);
+            int userId = Integer.parseInt(userIdStr);
+            Users realUser = userMapper.selectByPrimaryKey(userId);
+            if (userName.equals(realUser.getUsername())) {
+                return realUser;
+            } else {
+                logger.info("login by cookie fail, real user name is:"
+                        + realUser.getUsername());
+                return null;
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return null;
+        }
+    }
 
-	@Override
-	public void saveLoginCookie(HttpServletResponse response, Users user) {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void saveLoginCookie(HttpServletResponse response, Users user) {
+        try {
+            String cookie = CipherHelper.encrypt(user.getUserid() + "-" + user.getUsername());
+            cookieUtils.setCookie(response,
+                    SharedConstants.USER_COOKIE_KEY, cookie,
+                    SharedConstants.COOKIE_EXPIRE_TIME);
+        } catch (Exception ex) {
+            logger.error("Save user cookie failed, error is:" + ex.getMessage());
+        }
+    }
 
-	@Override
-	public void removeLoginCookie(HttpServletResponse response) {
-		// TODO Auto-generated method stub
-		
-	}
-
-//    @Override
-//    public Users loginByCookie(String userCookie) {
-//        logger.info("login by cookie, user cookie is:" + userCookie);
-//        String[] userIdName = CipherHelper.decrypt(userCookie).split("-");
-//        if (userIdName == null || userIdName.length < 2) {
-//            logger.info("login by cookie fail, userIdName is:" + userIdName);
-//            return null;
-//        }
-//        try {
-//            String userIdStr = userIdName[0];
-//            String userName = userIdName[1];
-//            logger.info("login by cookie, user:" + userName + ", id:"
-//                    + userIdStr);
-//            int userId = Integer.parseInt(userIdStr);
-//            User realUser = userMapper.selectByPrimaryKey(userId);
-//            if (userName.equals(realUser.getUsername())) {
-//                return realUser;
-//            } else {
-//                logger.info("login by cookie fail, real user name is:"
-//                        + realUser.getUsername());
-//                return null;
-//            }
-//        } catch (Exception ex) {
-//            ex.printStackTrace();
-//            return null;
-//        }
-//    }
-
-//    @Override
-//    public void saveLoginCookie(HttpServletResponse response, User user) {
-//        try {
-//            String cookie = CipherHelper.encrypt(user.getId() + "-" + user.getUsername());
-//            cookieUtils.setCookie(response,
-//                    SharedConstants.USER_COOKIE_KEY, cookie,
-//                    SharedConstants.COOKIE_EXPIRE_TIME);
-//        } catch (Exception ex) {
-//            logger.error("Save user cookie failed, error is:" + ex.getMessage());
-//        }
-//    }
-
-//    @Override
-//    public void removeLoginCookie(HttpServletResponse response) {
-//        try {
-//            cookieUtils.removeCookie(response, SharedConstants.USER_COOKIE_KEY);
-//        } catch (Exception ex) {
-//            logger.error("Save user cookie failed, error is:" + ex.getMessage());
-//        }
-//    }
+    @Override
+    public void removeLoginCookie(HttpServletResponse response) {
+        try {
+            cookieUtils.removeCookie(response, SharedConstants.USER_COOKIE_KEY);
+        } catch (Exception ex) {
+            logger.error("Save user cookie failed, error is:" + ex.getMessage());
+        }
+    }
 }

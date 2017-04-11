@@ -76,7 +76,7 @@ public class LoginController extends AbstractController {
 
             Role role = userService.getUserRole(user);
             AuthenticationHelper.putAuthenticatedUserRole(session, role);
-//            loginService.saveLoginCookie(response, user);
+            loginService.saveLoginCookie(response, user);
         } catch (AuthenticationException e) {
             logger.error("authentication failed!" + e.getMessage());
             result.reject("form.login.error.username.password.not.match");
@@ -97,14 +97,11 @@ public class LoginController extends AbstractController {
             Users user = loginService.login(username, password,
                     request.getRemoteAddr());
             AuthenticationHelper.putAuthentication(session, user);
-//            int noReadCount = messageService.getMessageCount(user.getId(),
-//                    MessageType.ALL, MessageStatus.SENT);
-//            request.getSession().setAttribute("noReadCount", noReadCount);
             Role role = userService.getUserRole(user);
             AuthenticationHelper.putAuthenticatedUserRole(session, role);
             session.setMaxInactiveInterval(900);
 
-//            loginService.saveLoginCookie(response, user);
+            loginService.saveLoginCookie(response, user);
             return new AjaxResult(AjaxResult.SUCCESS,
                     request.getHeader("Referer"));
 
